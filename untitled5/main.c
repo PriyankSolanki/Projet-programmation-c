@@ -28,6 +28,8 @@ void main(){
     int fonctionnalite;
 
     while(true) {
+
+        node_t * repertoire = NULL;
         printf("Que voulez vous faire :\n");
         printf("\tAjouter une personne : 1\n");
         printf("\tAfficher le repertoire : 2\n");
@@ -51,16 +53,16 @@ void main(){
         }
         switch(fonctionnalite) {
             case 1:
-                ajouter_personne();
+                repertoire = ajouter_personne(repertoire);
             break;
             case 2:
-                afficher_repertoire();
+                afficher_repertoire(repertoire);
             break;
             case 3:
-                afficher_personne();
+                afficher_personne(repertoire);
             break;
             case 4:
-                supprimer_personne();
+                repertoire = supprimer_personne(repertoire);
             break;
         }
     }

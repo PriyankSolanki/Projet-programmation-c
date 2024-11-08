@@ -74,7 +74,26 @@ struct node * ajouter_personne(struct node * liste) {
 }
 
 void afficher_repertoire(struct node * liste) {
-    //TODO
+    if (liste == NULL) {
+        printf("La liste est NULL");
+    }
+    int i = 1;
+    node_t * end = liste;
+    node_t * current = liste;
+    printf("Personne %d :", i);
+    printf("\tnom = %s\n", current->personne->nom);
+    printf("\tprenom = %s\n", current->personne->prenom);
+    printf("\tnumero de telephone = %s\n", current->personne->numero_telephone);
+    printf("\tadresse mail = %s\n", current->personne->adresse_mail);
+    current = current->next;
+    while (current != end) {
+        i++;
+        printf("Personne %d :", i);
+        printf("\tnom = %s\n", current->personne->nom);
+        printf("\tprenom = %s\n", current->personne->prenom);
+        printf("\tnumero de telephone = %s\n", current->personne->numero_telephone);
+        printf("\tadresse mail = %s\n", current->personne->adresse_mail);
+    }
 }
 
 void afficher_personne(struct node * liste) {

@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <string.h>
 
 //objet personne
 typedef struct personne {
@@ -97,7 +98,36 @@ void afficher_repertoire(struct node * liste) {
 }
 
 void afficher_personne(struct node * liste) {
-    //TODO
+    if (liste == NULL) {
+        printf("La liste est NULL");
+    }
+    printf("Entrer le nom que vous voulez chercher :");
+    char nom[40];
+    scanf("%s", &nom);
+    int trouver = 0;
+    node_t * end = liste;
+    node_t * current = liste;
+
+    if(strcmp(current->personne->nom, nom) == 0) {
+        printf("\tnom = %s\n", current->personne->nom);
+        printf("\tprenom = %s\n", current->personne->prenom);
+        printf("\tnumero de telephone = %s\n", current->personne->numero_telephone);
+        printf("\tadresse mail = %s\n", current->personne->adresse_mail);
+    }
+    current = current->next;
+    while (current != end) {
+        if(strcmp(current->personne->nom, nom) == 0) {
+            printf("\tnom = %s\n", current->personne->nom);
+            printf("\tprenom = %s\n", current->personne->prenom);
+            printf("\tnumero de telephone = %s\n", current->personne->numero_telephone);
+            printf("\tadresse mail = %s\n", current->personne->adresse_mail);
+            trouver = 1;
+        }
+        current = current->next;
+    }
+    if(trouver==0) {
+        printf("Il n'existe pas de %s dans le repertoire", nom);
+    }
 }
 
 struct node * supprimer_personne(struct node * liste) {

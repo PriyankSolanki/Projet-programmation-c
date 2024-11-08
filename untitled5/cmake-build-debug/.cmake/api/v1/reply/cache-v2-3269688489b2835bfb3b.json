@@ -55,7 +55,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "c:/Users/xxp90/CLionProjects/untitled5/cmake-build-debug"
+			"value" : "c:/wamp64/www/test/Projet-programmation-c/untitled5/cmake-build-debug"
 		},
 		{
 			"name" : "CMAKE_CACHE_MAJOR_VERSION",
@@ -431,7 +431,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/xxp90/CLionProjects/untitled5/cmake-build-debug/CMakeFiles/pkgRedirects"
+			"value" : "C:/wamp64/www/test/Projet-programmation-c/untitled5/cmake-build-debug/CMakeFiles/pkgRedirects"
 		},
 		{
 			"name" : "CMAKE_GENERATOR",
@@ -503,7 +503,7 @@
 				}
 			],
 			"type" : "INTERNAL",
-			"value" : "C:/Users/xxp90/CLionProjects/untitled5"
+			"value" : "C:/wamp64/www/test/Projet-programmation-c/untitled5"
 		},
 		{
 			"name" : "CMAKE_INSTALL_PREFIX",
@@ -1147,7 +1147,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/xxp90/CLionProjects/untitled5/cmake-build-debug"
+			"value" : "C:/wamp64/www/test/Projet-programmation-c/untitled5/cmake-build-debug"
 		},
 		{
 			"name" : "untitled5_IS_TOP_LEVEL",
@@ -1171,7 +1171,7 @@
 				}
 			],
 			"type" : "STATIC",
-			"value" : "C:/Users/xxp90/CLionProjects/untitled5"
+			"value" : "C:/wamp64/www/test/Projet-programmation-c/untitled5"
 		}
 	],
 	"kind" : "cache",

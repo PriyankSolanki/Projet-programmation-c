@@ -18,10 +18,10 @@ typedef struct node {
 } node_t;
 
 
-void ajouter_personne();
-void afficher_repertoire();
-void afficher_personne();
-void supprimer_personne();
+struct node * ajouter_personne(struct node * liste);
+void afficher_repertoire(struct node * liste);
+void afficher_personne(struct node * liste);
+struct node * supprimer_personne(struct node * liste);
 
 
 void main(){
@@ -67,18 +67,18 @@ void main(){
     printf("Le programme est terminer");
 }
 
-void ajouter_personne() {
+struct node * ajouter_personne(struct node * liste) {
     //TODO
 }
 
-void afficher_repertoire() {
+void afficher_repertoire(struct node * liste) {
     //TODO
 }
 
-void afficher_personne() {
+void afficher_personne(struct node * liste) {
     //TODO
 }
 
-void supprimer_personne() {
+struct node * supprimer_personne(struct node * liste) {
     //TODO
 }

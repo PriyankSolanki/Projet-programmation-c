@@ -31,22 +31,22 @@ void main(){
     int fonctionnalite;
     node_t * repertoire = NULL;
     while(true) {
-        printf("Gestion du repertoire :\n");
-        printf("\tAjouter une personne : 1\n");
-        printf("\tAfficher le repertoire : 2\n");
-        printf("\tRealiser une recherche par nom : 3\n");
-        printf("\tSuprimmer une personne par nom : 4\n");
-        printf("\tQuitter : 5\n");
+        printf("\nGestion du repertoire :");
+        printf("\n\tAjouter une personne : 1");
+        printf("\n\tAfficher le repertoire : 2");
+        printf("\n\tRealiser une recherche par nom : 3");
+        printf("\n\tSuprimmer une personne par nom : 4");
+        printf("\n\tQuitter : 5\n");
         scanf("%d",&fonctionnalite);
 
         while(fonctionnalite<1 || fonctionnalite>5) {
-            printf("Votre commande n'est pas valide \n");
-            printf("Entrer un nouvelle commande :\n");
-            printf("\tAjouter une personne : 1\n");
-            printf("\tAfficher le repertoire : 2\n");
-            printf("\tRealiser une recherche par nom : 3\n");
-            printf("\tSuprimmer une personne par nom : 4\n");
-            printf("\tQuitter : 5\n");
+            printf("\nVotre commande n'est pas valide");
+            printf("\nEntrer un nouvelle commande :");
+            printf("\n\tAjouter une personne : 1");
+            printf("\n\tAfficher le repertoire : 2");
+            printf("\n\tRealiser une recherche par nom : 3");
+            printf("\n\tSuprimmer une personne par nom : 4");
+            printf("\n\tQuitter : 5");
             scanf("%d",&fonctionnalite);
         }
         if(fonctionnalite==5) {
@@ -73,17 +73,17 @@ void main(){
 node_t * ajouter_personne(node_t * liste) {
     personne_t * personne = malloc(sizeof(personne_t));
     if(personne==NULL) {
-        printf("Erreur d'allocation de memoire\n");
+        printf("\nErreur d'allocation de memoire");
         return NULL;
     }
 
-    printf("Entrer le nom (40 caracteres max) :\n");
+    printf("\nEntrer le nom (40 caracteres max) :");
     scanf("%s", personne->nom);
-    printf("Entrer le prenom (40 caracteres max) :\n");
+    printf("\nEntrer le prenom (40 caracteres max) :");
     scanf("%s", personne->prenom);
-    printf("Entrer le numero de telephone (40 caracteres max) :\n");
+    printf("\nEntrer le numero de telephone (40 caracteres max) :");
     scanf("%s", personne->numero_telephone);
-    printf("Entrer l'adresse mail (40 caracteres max) :\n");
+    printf("\nEntrer l'adresse mail (40 caracteres max) :");
     scanf("%s", personne->adresse_mail);
     node_t * node = (node_t *) malloc(sizeof(node_t));
     node->personne = personne;
@@ -100,7 +100,7 @@ node_t * ajouter_personne(node_t * liste) {
 
 void afficher_repertoire(node_t * liste) {
     if (liste == NULL) {
-        printf("Le repertoire est vide\n");
+        printf("\nLe repertoire est vide");
         return;
     }
     int i = 1;
@@ -117,10 +117,10 @@ void afficher_repertoire(node_t * liste) {
 
 void rechercher_personne(node_t * liste) {
     if (liste == NULL) {
-        printf("Le repertoire est vide\n");
+        printf("\nLe repertoire est vide");
         return;
     }
-    printf("Entrer le nom que vous voulez chercher :");
+    printf("\nEntrer le nom que vous voulez chercher :");
     char nom[40];
     scanf("%s", &nom);
     node_t * current = liste;
@@ -135,7 +135,7 @@ void rechercher_personne(node_t * liste) {
         }
         current = current->next;
     }
-    printf("Il n'existe pas de personne avec le nom : %s dans le repertoire\n", nom);
+    printf("\nIl n'existe pas de personne avec le nom : %s dans le repertoire", nom);
 }
 
 node_t * supprimer_personne(node_t * liste) {
@@ -143,9 +143,8 @@ node_t * supprimer_personne(node_t * liste) {
 }
 
 void afficher_personne(personne_t * personne) {
-    printf("\tnom : %s\n", personne->nom);
+    printf("\n\tnom : %s\n", personne->nom);
     printf("\tprenom : %s\n", personne->prenom);
     printf("\tnumero de telephone : %s\n", personne->numero_telephone);
     printf("\tadresse mail : %s\n", personne->adresse_mail);
-    printf("\n");
 }

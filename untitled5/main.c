@@ -4,14 +4,14 @@
 
 //objet personne
 typedef struct personne {
-    char nom[40];
+    char nom[40]; // doit etre unique
     char prenom[40];
     char numero_telephone[40];
     char adresse_mail[40];
 } personne_t;
 
 
-//utilisation d'une chaine circulaire
+//utilisation d'une chaine doublement chainee
 typedef struct node {
     personne_t * personne;
     struct node * next;
@@ -19,10 +19,11 @@ typedef struct node {
 } node_t;
 
 
-struct node * ajouter_personne(struct node * liste);
-void afficher_repertoire(struct node * liste);
-void afficher_personne(struct node * liste);
-struct node * supprimer_personne(struct node * liste);
+struct node * ajouter_personne(node_t * liste); //Ajouter une personne au repertoire
+void afficher_repertoire(node_t * liste); //Afficher le repertoire
+void rechercher_personne(node_t * liste); //Rechercher une personne avec son nom
+struct node * supprimer_personne(node_t * liste); //Supprimer une personne du repertoire avec son nom
+void afficher_personne(personne_t * personne); //Afficher les attributs d'une personne
 
 
 void main(){
@@ -31,7 +32,7 @@ void main(){
     while(true) {
 
         node_t * repertoire = NULL;
-        printf("Que voulez vous faire :\n");
+        printf("Gestion du repertoire :\n");
         printf("\tAjouter une personne : 1\n");
         printf("\tAfficher le repertoire : 2\n");
         printf("\tRealiser une recherche par nom : 3\n");
@@ -40,8 +41,8 @@ void main(){
         scanf("%d",&fonctionnalite);
 
         while(fonctionnalite<1 || fonctionnalite>5) {
-            printf("Votre demande n'est pas valid \n");
-            printf("Entrer un nouvelle demande :\n");
+            printf("Votre commande n'est pas valide \n");
+            printf("Entrer un nouvelle commande :\n");
             printf("\tAjouter une personne : 1\n");
             printf("\tAfficher le repertoire : 2\n");
             printf("\tRealiser une recherche par nom : 3\n");
@@ -60,44 +61,34 @@ void main(){
                 afficher_repertoire(repertoire);
             break;
             case 3:
-                afficher_personne(repertoire);
+                rechercher_personne(repertoire);
             break;
             case 4:
                 repertoire = supprimer_personne(repertoire);
             break;
         }
     }
-    printf("Le programme est terminer");
+    printf("La gestion du repertoire est termine");
 }
 
-struct node * ajouter_personne(struct node * liste) {
+node_t * ajouter_personne(struct node * liste) {
     //TODO
 }
 
-void afficher_repertoire(struct node * liste) {
+void afficher_repertoire(node_t * liste) {
     if (liste == NULL) {
         printf("La liste est NULL");
     }
     int i = 1;
-    node_t * end = liste;
     node_t * current = liste;
-    printf("Personne %d :", i);
-    printf("\tnom = %s\n", current->personne->nom);
-    printf("\tprenom = %s\n", current->personne->prenom);
-    printf("\tnumero de telephone = %s\n", current->personne->numero_telephone);
-    printf("\tadresse mail = %s\n", current->personne->adresse_mail);
-    current = current->next;
-    while (current != end) {
+    while (current->next != NULL) {
+        afficher_personne(current->personne);
+        current = current->next;
         i++;
-        printf("Personne %d :", i);
-        printf("\tnom = %s\n", current->personne->nom);
-        printf("\tprenom = %s\n", current->personne->prenom);
-        printf("\tnumero de telephone = %s\n", current->personne->numero_telephone);
-        printf("\tadresse mail = %s\n", current->personne->adresse_mail);
     }
 }
 
-void afficher_personne(struct node * liste) {
+void rechercher_personne(node_t * liste) {
     if (liste == NULL) {
         printf("La liste est NULL");
     }
@@ -105,31 +96,27 @@ void afficher_personne(struct node * liste) {
     char nom[40];
     scanf("%s", &nom);
     int trouver = 0;
-    node_t * end = liste;
     node_t * current = liste;
-
-    if(strcmp(current->personne->nom, nom) == 0) {
-        printf("\tnom = %s\n", current->personne->nom);
-        printf("\tprenom = %s\n", current->personne->prenom);
-        printf("\tnumero de telephone = %s\n", current->personne->numero_telephone);
-        printf("\tadresse mail = %s\n", current->personne->adresse_mail);
-    }
-    current = current->next;
-    while (current != end) {
+    while (current->next !=NULL) {
         if(strcmp(current->personne->nom, nom) == 0) {
-            printf("\tnom = %s\n", current->personne->nom);
-            printf("\tprenom = %s\n", current->personne->prenom);
-            printf("\tnumero de telephone = %s\n", current->personne->numero_telephone);
-            printf("\tadresse mail = %s\n", current->personne->adresse_mail);
+            afficher_personne(current->personne);
             trouver = 1;
         }
         current = current->next;
     }
     if(trouver==0) {
-        printf("Il n'existe pas de %s dans le repertoire", nom);
+        printf("Il n'existe pas de personne avec le nom : %s dans le repertoire", nom);
     }
 }
 
-struct node * supprimer_personne(struct node * liste) {
+node_t * supprimer_personne(node_t * liste) {
     //TODO
+}
+
+void afficher_personne(personne_t * personne) {
+    printf("\tnom : %s\n", personne->nom);
+    printf("\tprenom : %s\n", personne->prenom);
+    printf("\tnumero de telephone : %s\n", personne->numero_telephone);
+    printf("\tadresse mail : %s\n", personne->adresse_mail);
+    printf("\n");
 }

@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 //objet personne
@@ -28,10 +29,8 @@ void afficher_personne(personne_t * personne); //Afficher les attributs d'une pe
 
 void main(){
     int fonctionnalite;
-
+    node_t * repertoire = NULL;
     while(true) {
-
-        node_t * repertoire = NULL;
         printf("Gestion du repertoire :\n");
         printf("\tAjouter une personne : 1\n");
         printf("\tAfficher le repertoire : 2\n");
@@ -68,45 +67,75 @@ void main(){
             break;
         }
     }
-    printf("La gestion du repertoire est termine");
+    printf("\nLa gestion du repertoire est termine");
 }
 
-node_t * ajouter_personne(struct node * liste) {
-    //TODO
+node_t * ajouter_personne(node_t * liste) {
+    personne_t * personne = malloc(sizeof(personne_t));
+    if(personne==NULL) {
+        printf("Erreur d'allocation de memoire\n");
+        return NULL;
+    }
+
+    printf("Entrer le nom (40 caracteres max) :\n");
+    scanf("%s", personne->nom);
+    printf("Entrer le prenom (40 caracteres max) :\n");
+    scanf("%s", personne->prenom);
+    printf("Entrer le numero de telephone (40 caracteres max) :\n");
+    scanf("%s", personne->numero_telephone);
+    printf("Entrer l'adresse mail (40 caracteres max) :\n");
+    scanf("%s", personne->adresse_mail);
+    node_t * node = (node_t *) malloc(sizeof(node_t));
+    node->personne = personne;
+    if (liste == NULL) {
+        node->next = NULL;
+        node->prev = NULL;
+        return node;
+    }else {
+        liste->prev = node;
+        node->next = liste;
+        return node;
+    }
 }
 
 void afficher_repertoire(node_t * liste) {
     if (liste == NULL) {
-        printf("La liste est NULL");
+        printf("Le repertoire est vide\n");
+        return;
     }
     int i = 1;
     node_t * current = liste;
+    printf("Personne %d", i);
+    afficher_personne(current->personne);
     while (current->next != NULL) {
+        i++;
+        printf("Personne %d", i);
         afficher_personne(current->personne);
         current = current->next;
-        i++;
     }
 }
 
 void rechercher_personne(node_t * liste) {
     if (liste == NULL) {
-        printf("La liste est NULL");
+        printf("Le repertoire est vide\n");
+        return;
     }
     printf("Entrer le nom que vous voulez chercher :");
     char nom[40];
     scanf("%s", &nom);
-    int trouver = 0;
     node_t * current = liste;
+    if(strcmp(current->personne->nom, nom) == 0) {
+        afficher_personne(current->personne);
+        return;
+    }
     while (current->next !=NULL) {
         if(strcmp(current->personne->nom, nom) == 0) {
             afficher_personne(current->personne);
-            trouver = 1;
+            return;
         }
         current = current->next;
     }
-    if(trouver==0) {
-        printf("Il n'existe pas de personne avec le nom : %s dans le repertoire", nom);
-    }
+    printf("Il n'existe pas de personne avec le nom : %s dans le repertoire\n", nom);
 }
 
 node_t * supprimer_personne(node_t * liste) {

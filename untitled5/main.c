@@ -5,146 +5,193 @@
 
 //objet personne
 typedef struct personne {
-    char nom[40]; // doit etre unique
+    char nom[40]; // doit être unique
     char prenom[40];
     char numero_telephone[40];
     char adresse_mail[40];
 } personne_t;
 
-
-//utilisation d'une chaine doublement chainee
+// Utilisation d'une chaîne doublement chaînée
 typedef struct node {
-    personne_t * personne;
-    struct node * next;
-    struct node * prev;
+    personne_t *personne;
+    struct node *next;
+    struct node *prev;
 } node_t;
 
+node_t *ajouter_personne(node_t *liste); //Ajouter une personne au répertoire
+void afficher_repertoire(node_t *liste); //Afficher le répertoire
+void rechercher_personne(node_t *liste); //Rechercher une personne avec son nom
+node_t *supprimer_personne(node_t *liste); //Supprimer une personne du répertoire avec son nom
+void afficher_personne(personne_t *personne); //Afficher les attributs d'une personne
 
-struct node * ajouter_personne(node_t * liste); //Ajouter une personne au repertoire
-void afficher_repertoire(node_t * liste); //Afficher le repertoire
-void rechercher_personne(node_t * liste); //Rechercher une personne avec son nom
-struct node * supprimer_personne(node_t * liste); //Supprimer une personne du repertoire avec son nom
-void afficher_personne(personne_t * personne); //Afficher les attributs d'une personne
-
-
-void main(){
+int main() {
     int fonctionnalite;
-    node_t * repertoire = NULL;
-    while(true) {
+    node_t *repertoire = NULL;
+    while (true) {
         printf("\nGestion du repertoire :");
         printf("\n\tAjouter une personne : 1");
         printf("\n\tAfficher le repertoire : 2");
         printf("\n\tRealiser une recherche par nom : 3");
-        printf("\n\tSuprimmer une personne par nom : 4");
+        printf("\n\tSupprimer une personne par nom : 4");
         printf("\n\tQuitter : 5\n");
-        scanf("%d",&fonctionnalite);
+        scanf("%d", &fonctionnalite);
 
-        while(fonctionnalite<1 || fonctionnalite>5) {
+        while (fonctionnalite < 1 || fonctionnalite > 5) {
             printf("\nVotre commande n'est pas valide");
-            printf("\nEntrer un nouvelle commande :");
+            printf("\nEntrer une nouvelle commande :");
             printf("\n\tAjouter une personne : 1");
             printf("\n\tAfficher le repertoire : 2");
             printf("\n\tRealiser une recherche par nom : 3");
-            printf("\n\tSuprimmer une personne par nom : 4");
-            printf("\n\tQuitter : 5");
-            scanf("%d",&fonctionnalite);
+            printf("\n\tSupprimer une personne par nom : 4");
+            printf("\n\tQuitter : 5\n");
+            scanf("%d", &fonctionnalite);
+
+            // faire vérification d'entrée
         }
-        if(fonctionnalite==5) {
+        if (fonctionnalite == 5) {
             break;
         }
-        switch(fonctionnalite) {
+        switch (fonctionnalite) {
             case 1:
                 repertoire = ajouter_personne(repertoire);
-            break;
+                break;
             case 2:
                 afficher_repertoire(repertoire);
-            break;
+                break;
             case 3:
                 rechercher_personne(repertoire);
-            break;
+                break;
             case 4:
                 repertoire = supprimer_personne(repertoire);
-            break;
+                break;
         }
     }
-    printf("\nLa gestion du repertoire est termine");
+    printf("\nMerci de votre visite !\n");
+    return 0;
 }
 
-node_t * ajouter_personne(node_t * liste) {
-    personne_t * personne = malloc(sizeof(personne_t));
-    if(personne==NULL) {
-        printf("\nErreur d'allocation de memoire");
-        return NULL;
+// Faire les vérifications d'entrées (string, numéro de tel, mail @)
+
+node_t *ajouter_personne(node_t *liste) {
+    personne_t *personne = malloc(sizeof(personne_t));
+    if (personne == NULL) {
+        printf("\nErreur d'allocation de memoire\n");
+        return liste;
     }
 
-    printf("\nEntrer le nom (40 caracteres max) :");
-    scanf("%s", personne->nom);
-    printf("\nEntrer le prenom (40 caracteres max) :");
-    scanf("%s", personne->prenom);
-    printf("\nEntrer le numero de telephone (40 caracteres max) :");
-    scanf("%s", personne->numero_telephone);
-    printf("\nEntrer l'adresse mail (40 caracteres max) :");
-    scanf("%s", personne->adresse_mail);
-    node_t * node = (node_t *) malloc(sizeof(node_t));
+    printf("\nEntrer le nom (40 caracteres max) : ");
+    scanf("%39s", personne->nom);
+    printf("Entrer le prenom (40 caracteres max) : ");
+    scanf("%39s", personne->prenom);
+
+    // Vérification des doublons
+    node_t *current = liste;
+    while (current != NULL) {
+        if (strcmp(current->personne->nom, personne->nom) == 0) {
+            printf("\n%s existe daja dans le repertoire.\n", personne->nom);
+            free(personne);
+            return liste;
+        }
+        current = current->next;
+    }
+
+    printf("Entrer le numero de telephone (40 caracteres max) : ");
+    scanf("%39s", personne->numero_telephone);
+    printf("Entrer l'adresse mail (40 caracteres max) : ");
+    scanf("%39s", personne->adresse_mail);
+
+    node_t *node = malloc(sizeof(node_t));
+    if (node == NULL) {
+        printf("\nErreur d'allocation de memoire\n");
+        free(personne);
+        return liste;
+    }
+
     node->personne = personne;
-    if (liste == NULL) {
-        node->next = NULL;
-        node->prev = NULL;
-        return node;
-    }else {
+    node->next = liste;
+    node->prev = NULL;
+    if (liste != NULL) {
         liste->prev = node;
-        node->next = liste;
-        return node;
     }
+    return node;
 }
 
-void afficher_repertoire(node_t * liste) {
+void afficher_repertoire(node_t *liste) {
     if (liste == NULL) {
-        printf("\nLe repertoire est vide");
+        printf("\nLe repertoire est vide\n");
         return;
     }
+
     int i = 1;
-    node_t * current = liste;
-    printf("Personne %d", i);
-    afficher_personne(current->personne);
-    while (current->next != NULL) {
-        i++;
-        printf("Personne %d", i);
+    node_t *current = liste;
+    while (current != NULL) {
+        printf("\nPersonne %d :\n", i++);
         afficher_personne(current->personne);
         current = current->next;
     }
 }
 
-void rechercher_personne(node_t * liste) {
+// faire une recherche sans regarder les maj
+void rechercher_personne(node_t *liste) {
     if (liste == NULL) {
-        printf("\nLe repertoire est vide");
+        printf("\nLe repertoire est vide\n");
         return;
     }
-    printf("\nEntrer le nom que vous voulez chercher :");
+
     char nom[40];
-    scanf("%s", &nom);
-    node_t * current = liste;
-    if(strcmp(current->personne->nom, nom) == 0) {
-        afficher_personne(current->personne);
-        return;
-    }
-    while (current->next !=NULL) {
-        if(strcmp(current->personne->nom, nom) == 0) {
+    printf("\nEntrer le nom que vous voulez chercher : ");
+    scanf("%39s", nom);
+
+    node_t *current = liste;
+    while (current != NULL) {
+        if (strcmp(current->personne->nom, nom) == 0) {
             afficher_personne(current->personne);
             return;
         }
         current = current->next;
     }
-    printf("\nIl n'existe pas de personne avec le nom : %s dans le repertoire", nom);
+
+    printf("\nIl n'existe pas de personne avec le nom : %s dans le repertoire\n", nom);
 }
 
-node_t * supprimer_personne(node_t * liste) {
-    //TODO
+// supprimer une personne en demandant son prénom si y'a deux fois le meme nom
+node_t *supprimer_personne(node_t *liste) {
+    if (liste == NULL) {
+        printf("\nLe repertoire est vide\n");
+        return NULL;
+    }
+
+    char nom[40];
+    printf("\nEntrez le nom de la personne que vous souhaitez supprimer : ");
+    scanf("%39s", nom);
+
+    node_t *current = liste;
+    while (current != NULL) {
+        if (strcmp(current->personne->nom, nom) == 0) {
+            if (current->prev != NULL) {
+                current->prev->next = current->next;
+            } else {
+                liste = current->next;
+            }
+            if (current->next != NULL) {
+                current->next->prev = current->prev;
+            }
+
+            free(current->personne);
+            free(current);
+            printf("\n%s a bien ete supprimee.\n", nom);
+            return liste;
+        }
+        current = current->next;
+    }
+
+    printf("\n%s n'a pas ete trouvee dans votre repertoire.\n", nom);
+    return liste;
 }
 
-void afficher_personne(personne_t * personne) {
-    printf("\n\tnom : %s\n", personne->nom);
-    printf("\tprenom : %s\n", personne->prenom);
-    printf("\tnumero de telephone : %s\n", personne->numero_telephone);
-    printf("\tadresse mail : %s\n", personne->adresse_mail);
+void afficher_personne(personne_t *personne) {
+    printf("\tNom : %s\n", personne->nom);
+    printf("\tPrenom : %s\n", personne->prenom);
+    printf("\tNumero de telephone : %s\n", personne->numero_telephone);
+    printf("\tAdresse mail : %s\n", personne->adresse_mail);
 }

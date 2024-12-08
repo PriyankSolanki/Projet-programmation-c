@@ -8,4 +8,6 @@ include_directories(include)
 add_executable(projetRepertoire
         src/main.c
         src/repertoire.c
-        include/repertoire.h)
+        src/inputChecker.c
+        include/repertoire.h
+        include/inputChecker.h)

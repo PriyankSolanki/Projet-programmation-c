@@ -11,36 +11,54 @@ node_t *ajouter_personne(node_t *liste) {
         return liste;
     }
 
-    while (!estValideNomPrenom(personne->nom)){
+    // Saisie du nom
+    do {
         printf("Entrer le nom : ");
         scanf("%39s", personne->nom);
-    }
-    while (!estValideNomPrenom(personne->prenom)){
+        if (!estValideNomPrenom(personne->nom)) {
+            printf("Le nom doit contenir uniquement des lettres.\n");
+        }
+    } while (!estValideNomPrenom(personne->nom));
+
+    // Saisie du prenom
+    do {
         printf("Entrer le prenom : ");
         scanf("%39s", personne->prenom);
-    }
+        if (!estValideNomPrenom(personne->prenom)) {
+            printf("Le prenom doit contenir uniquement des lettres.\n");
+        }
+    } while (!estValideNomPrenom(personne->prenom));
 
-    // vérification des doublons
+    // Vérification des doublons
     node_t *current = liste;
     while (current != NULL) {
         if (strcmp(current->personne->nom, personne->nom) == 0) {
-            printf("%s existe deja.\n", personne->nom);
+            printf("%s existe deja dans le repertoire.\n", personne->nom);
             free(personne);
             return liste;
         }
         current = current->next;
     }
 
-    while (!verifeNum(personne->numero_telephone)){
+    // Saisie du numero de telephone
+    do {
         printf("Entrer le numero de telephone : ");
         scanf("%39s", personne->numero_telephone);
-    }
+        if (!verifeNum(personne->numero_telephone)) {
+            printf("Le numero de telephone doit contenir 10 chiffres.\n");
+        }
+    } while (!verifeNum(personne->numero_telephone));
 
-    while (!verifMail(personne->adresse_mail)){
+    // Saisie de l'adresse mail
+    do {
         printf("Entrer l'adresse mail : ");
         scanf("%39s", personne->adresse_mail);
-    }
+        if (!verifMail(personne->adresse_mail)) {
+            printf("L'adresse mail doit contenir un @ et un point.\n");
+        }
+    } while (!verifMail(personne->adresse_mail));
 
+    // Allocation d'un nouveau noeud
     node_t *node = malloc(sizeof(node_t));
     if (node == NULL) {
         printf("Erreur d'allocation de memoire.\n");
@@ -55,12 +73,13 @@ node_t *ajouter_personne(node_t *liste) {
     if (liste != NULL) {
         liste->prev = node;
     }
+
     return node;
 }
 
 void afficher_repertoire(node_t *liste) {
     if (liste == NULL) {
-        printf("\nLe repertoire est vide\n");
+        printf("\nLe repertoire est vide.\n");
         return;
     }
 
@@ -73,10 +92,9 @@ void afficher_repertoire(node_t *liste) {
     }
 }
 
-// faire une recherche sans regarder les maj
 void rechercher_personne(node_t *liste) {
     if (liste == NULL) {
-        printf("\nLe repertoire est vide\n");
+        printf("\nLe repertoire est vide.\n");
         return;
     }
 
@@ -86,20 +104,19 @@ void rechercher_personne(node_t *liste) {
 
     node_t *current = liste;
     while (current != NULL) {
-        if (strcmp(current->personne->nom, nom) == 0) {
+        if (strcasecmp(current->personne->nom, nom) == 0) {
             afficher_personne(current->personne);
             return;
         }
         current = current->next;
     }
 
-    printf("\nIl n'existe pas de personne avec le nom %s dans le repertoire\n", nom);
+    printf("\nIl n'existe pas de personne avec le nom %s dans le repertoire.\n", nom);
 }
 
-// supprimer une personne en demandant son prénom si y'a deux fois le meme nom
 node_t *supprimer_personne(node_t *liste) {
     if (liste == NULL) {
-        printf("\nLe repertoire est vide\n");
+        printf("\nLe repertoire est vide.\n");
         return NULL;
     }
 
@@ -109,7 +126,7 @@ node_t *supprimer_personne(node_t *liste) {
 
     node_t *current = liste;
     while (current != NULL) {
-        if (strcmp(current->personne->nom, nom) == 0) {
+        if (strcasecmp(current->personne->nom, nom) == 0) {
             if (current->prev != NULL) {
                 current->prev->next = current->next;
             } else {
@@ -119,9 +136,9 @@ node_t *supprimer_personne(node_t *liste) {
                 current->next->prev = current->prev;
             }
 
+            printf("\n%s a bien ete supprimee.\n", nom);
             free(current->personne);
             free(current);
-            printf("\n%s a bien ete supprimee.\n", nom);
             return liste;
         }
         current = current->next;

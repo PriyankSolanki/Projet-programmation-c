@@ -1,4 +1,5 @@
 #include "../include/repertoire.h"
+#include "inputChecker.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -10,10 +11,14 @@ node_t *ajouter_personne(node_t *liste) {
         return liste;
     }
 
-    printf("Entrer le nom : ");
-    scanf("%39s", personne->nom);
-    printf("Entrer le prenom : ");
-    scanf("%39s", personne->prenom);
+    while (!estValideNomPrenom(personne->nom)){
+        printf("Entrer le nom : ");
+        scanf("%39s", personne->nom);
+    }
+    while (!estValideNomPrenom(personne->prenom)){
+        printf("Entrer le prenom : ");
+        scanf("%39s", personne->prenom);
+    }
 
     // vérification des doublons
     node_t *current = liste;
@@ -26,10 +31,15 @@ node_t *ajouter_personne(node_t *liste) {
         current = current->next;
     }
 
-    printf("Entrer le numero de telephone : ");
-    scanf("%39s", personne->numero_telephone);
-    printf("Entrer l'adresse mail : ");
-    scanf("%39s", personne->adresse_mail);
+    while (!verifeNum(personne->numero_telephone)){
+        printf("Entrer le numero de telephone : ");
+        scanf("%39s", personne->numero_telephone);
+    }
+
+    while (!verifMail(personne->adresse_mail)){
+        printf("Entrer l'adresse mail : ");
+        scanf("%39s", personne->adresse_mail);
+    }
 
     node_t *node = malloc(sizeof(node_t));
     if (node == NULL) {

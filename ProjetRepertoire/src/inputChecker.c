@@ -4,7 +4,14 @@
 #include <ctype.h>
 #include <string.h>
 
-
+/**
+ * @brief Vérifie si une chaîne est un nom ou un prénom valide.
+ *
+ * Un nom/prénom valide doit contenir uniquement des lettres (aucun chiffre ou caractère spécial).
+ *
+ * @param str Chaîne à vérifier.
+ * @return true si la chaîne est valide, false sinon.
+ */
 bool estValideNomPrenom(char* str){
 	if (strlen(str)<=0){
 		return false;
@@ -19,10 +26,22 @@ bool estValideNomPrenom(char* str){
 	return true;
 }
 
-bool verifeNum(const char* str) {
+/**
+ * @brief Vérifie si un numéro de téléphone est valide.
+ *
+ * Un numéro valide doit :
+ * - Commencer par '0' et contenir exactement 10 chiffres, ou
+ * - Commencer par '+33' et contenir exactement 12 caractères (dont le préfixe).
+ *
+ * @param str Chaîne représentant le numéro de téléphone.
+ * @return true si le numéro est valide, false sinon.
+ */
+bool verifNum(const char* str) {
     if (str==NULL) {
         return false;
     }
+
+    // Format "0XXXXXXXXX"
     if (str[0]=='0') {
         if (strlen(str) != 10) {
             return false;
@@ -34,7 +53,9 @@ bool verifeNum(const char* str) {
         }
         return true;
     }
-    else if (str[0]=='+' && str[1]=='3' && str[2]=='3') {
+
+    // Format "+33XXXXXXXX"
+    if (str[0]=='+' && str[1]=='3' && str[2]=='3') {
         if (strlen(str) != 12) {
             return false;
         }
@@ -49,6 +70,17 @@ bool verifeNum(const char* str) {
     return false;
 }
 
+/**
+ * @brief Vérifie si une adresse e-mail est valide.
+ *
+ * Une adresse e-mail valide doit :
+ * - Contenir un seul '@'.
+ * - Contenir au moins un '.' après le '@'.
+ * - Avoir des caractères valides avant et après '@' et '.'.
+ *
+ * @param str Chaîne représentant l'adresse e-mail.
+ * @return true si l'adresse est valide, false sinon.
+ */
 bool verifMail(char* str) {
     int lft = 0;
     if (strlen(str) <= 0) {
@@ -79,6 +111,16 @@ bool verifMail(char* str) {
     return aro && point;
 }
 
+/**
+ * @brief Vérifie si une combinaison nom/prénom existe déjà dans le répertoire.
+ *
+ * Parcourt la liste chaînée pour rechercher un doublon basé sur le nom et le prénom.
+ *
+ * @param liste Pointeur vers la tête de la liste.
+ * @param nom Nom à vérifier.
+ * @param prenom Prénom à vérifier.
+ * @return true si un doublon est trouvé, false sinon.
+ */
 bool estDoublonNomPrenom(node_t *liste, const char *nom, const char *prenom) {
     node_t *current = liste;
     while (current != NULL) {
@@ -91,6 +133,15 @@ bool estDoublonNomPrenom(node_t *liste, const char *nom, const char *prenom) {
     return false;
 }
 
+/**
+ * @brief Vérifie si un numéro de téléphone existe déjà dans le répertoire.
+ *
+ * Parcourt la liste chaînée pour rechercher un doublon basé sur le numéro de téléphone.
+ *
+ * @param liste Pointeur vers la tête de la liste.
+ * @param numero Numéro de téléphone à vérifier.
+ * @return true si un doublon est trouvé, false sinon.
+ */
 bool estDoublonNumTel(node_t *liste, const char *numero) {
     node_t *current = liste;
     while (current != NULL) {
@@ -102,6 +153,16 @@ bool estDoublonNumTel(node_t *liste, const char *numero) {
     return false;
 }
 
+
+/**
+ * @brief Vérifie si une adresse e-mail existe déjà dans le répertoire.
+ *
+ * Parcourt la liste chaînée pour rechercher un doublon basé sur l'adresse e-mail.
+ *
+ * @param liste Pointeur vers la tête de la liste.
+ * @param mail Adresse e-mail à vérifier.
+ * @return true si un doublon est trouvé, false sinon.
+ */
 bool estDoublonMail(node_t *liste, const char *mail) {
     node_t *current = liste;
     while (current != NULL) {

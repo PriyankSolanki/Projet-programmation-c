@@ -1,4 +1,7 @@
 #include "../include/repertoire.h"
+
+#include <ctype.h>
+
 #include "inputChecker.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -44,10 +47,10 @@ node_t *ajouter_personne(node_t *liste) {
     do {
         printf("Entrer le numero de telephone : ");
         scanf("%39s", personne->numero_telephone);
-        if (!verifeNum(personne->numero_telephone)) {
+        if (!verifNum(personne->numero_telephone)) {
             printf("Le numero de telephone doit contenir 10 chiffres.\n");
         }
-    } while (!verifeNum(personne->numero_telephone));
+    } while (!verifNum(personne->numero_telephone));
 
     // Vérification des doublons pour le num de tél
     while (estDoublonNumTel(liste, personne->numero_telephone)) {
@@ -55,7 +58,7 @@ node_t *ajouter_personne(node_t *liste) {
         do {
             printf("Entrer un autre numero de telephone : ");
             scanf("%39s", personne->numero_telephone);
-        } while (!verifeNum(personne->numero_telephone));
+        } while (!verifNum(personne->numero_telephone));
     }
 
     do {
@@ -180,8 +183,8 @@ node_t *supprimer_personne(node_t *liste) {
         return liste;
     }
 
-    node_t *current = liste;
     int count = 0;
+    node_t *current = liste;
     while (current != NULL) {
         if (strcasecmp(current->personne->nom, nom) == 0) {
             count++;
@@ -189,42 +192,40 @@ node_t *supprimer_personne(node_t *liste) {
         current = current->next;
     }
 
-    if (count == 1) {
-        if (matching->prev != NULL) {
-            matching->prev->next = matching->next;
-        } else {
-            liste = matching->next;
-        }
-        if (matching->next != NULL) {
-            matching->next->prev = matching->prev;
-        }
-
-        printf("\n%s %s a bien ete supprime(e).\n", matching->personne->prenom, matching->personne->nom);
-        free(matching->personne);
-        free(matching);
-        return liste;
-    } else {
-        printf("Il existe plusieurs %s. Quel est son prenom ? : ", nom);
+    if (count > 1) {
+        printf("Il existe plusieurs personnes avec le nom %s. Quel est son prenom ? : ", nom);
         scanf("%39s", prenom);
 
         matching = trouver_personne(liste, nom, prenom);
-        if (matching != NULL) {
-            if (matching->prev != NULL) {
-                matching->prev->next = matching->next;
-            } else {
-                liste = matching->next;
-            }
-            if (matching->next != NULL) {
-                matching->next->prev = matching->prev;
-            }
-
-            printf("\n%s %s a bien ete supprime(e).\n", matching->personne->prenom, matching->personne->nom);
-            free(matching->personne);
-            free(matching);
-        } else {
+        if (matching == NULL) {
             printf("\n%s %s n'a pas ete trouve(e) dans votre repertoire.\n", prenom, nom);
+            return liste;
         }
+    } else {
+        strncpy(prenom, matching->personne->prenom, sizeof(prenom) - 1);
+        prenom[sizeof(prenom) - 1] = '\0';
     }
+
+    char confirmation;
+    printf("\nVoulez-vous vraiment supprimer %s %s ? (o/n) : ", prenom, nom);
+    scanf(" %c", &confirmation);
+    if (tolower(confirmation) != 'o') {
+        printf("Suppression annulee.\n");
+        return liste;
+    }
+
+    if (matching->prev != NULL) {
+        matching->prev->next = matching->next;
+    } else {
+        liste = matching->next;
+    }
+    if (matching->next != NULL) {
+        matching->next->prev = matching->prev;
+    }
+
+    printf("\n%s %s a bien ete supprime(e).\n", prenom, nom);
+    free(matching->personne);
+    free(matching);
 
     return liste;
 }

@@ -14,6 +14,7 @@ node_t *ajouter_personne(node_t *liste) {
     do {
         printf("Entrer le nom : ");
         scanf("%39s", personne->nom);
+        while (getchar() != '\n');
         if (!estValideNomPrenom(personne->nom)) {
             printf("Le nom doit contenir uniquement des lettres.\n");
             while (getchar() != '\n');
@@ -23,6 +24,7 @@ node_t *ajouter_personne(node_t *liste) {
     do {
         printf("Entrer le prenom : ");
         scanf("%39s", personne->prenom);
+        while (getchar() != '\n');
         if (!estValideNomPrenom(personne->prenom)) {
             printf("Le prenom doit contenir uniquement des lettres.\n");
             while (getchar() != '\n');
@@ -110,33 +112,56 @@ void afficher_repertoire(node_t *liste) {
     }
 }
 
+node_t *trouver_personne(node_t *liste, const char *nom, const char *prenom) {
+    node_t *current = liste;
+    while (current != NULL) {
+        if (strcasecmp(current->personne->nom, nom) == 0 &&
+            (prenom == NULL || strcasecmp(current->personne->prenom, prenom) == 0)) {
+            return current;
+            }
+        current = current->next;
+    }
+    return NULL;
+}
+
 void rechercher_personne(node_t *liste) {
     if (liste == NULL) {
         printf("\nLe repertoire est vide.\n");
         return;
     }
 
-    char nom[40];
+    char nom[40], prenom[40];
     printf("\nEntrer le nom que vous voulez chercher : ");
     scanf("%39s", nom);
 
+    node_t *matching = trouver_personne(liste, nom, NULL);
+    if (matching == NULL) {
+        printf("\nIl n'existe pas de personne avec le nom %s dans le repertoire.\n", nom);
+        return;
+    }
+
     node_t *current = liste;
+    int count = 0;
     while (current != NULL) {
         if (strcasecmp(current->personne->nom, nom) == 0) {
-            char prenom[40];
-            printf("Plusieurs personnes ont ce nom. Entrer le prenom : ");
-            scanf("%39s", prenom);
-            while (getchar() != '\n');
-
-            if (strcasecmp(current->personne->prenom, prenom) == 0) {
-                afficher_personne(current->personne);
-                return;
-            }
+            count++;
         }
         current = current->next;
     }
 
-    printf("\nIl n'existe pas de personne avec le nom %s dans le repertoire.\n", nom);
+    if (count == 1) {
+        afficher_personne(matching->personne);
+    } else {
+        printf("Il existe plusieurs %s. Quel est son prenom ? : ", nom);
+        scanf("%39s", prenom);
+
+        matching = trouver_personne(liste, nom, prenom);
+        if (matching != NULL) {
+            afficher_personne(matching->personne);
+        } else {
+            printf("\nIl n'y a aucune personne avec le prenom %s et le nom %s dans votre repertoire.\n", prenom, nom);
+        }
+    }
 }
 
 node_t *supprimer_personne(node_t *liste) {
@@ -145,37 +170,62 @@ node_t *supprimer_personne(node_t *liste) {
         return NULL;
     }
 
-    char nom[40];
+    char nom[40], prenom[40];
     printf("\nEntrez le nom de la personne que vous souhaitez supprimer : ");
     scanf("%39s", nom);
 
+    node_t *matching = trouver_personne(liste, nom, NULL);
+    if (matching == NULL) {
+        printf("\n%s n'a pas ete trouve(e) dans votre repertoire.\n", nom);
+        return liste;
+    }
+
     node_t *current = liste;
+    int count = 0;
     while (current != NULL) {
         if (strcasecmp(current->personne->nom, nom) == 0) {
-            char prenom[40];
-            printf("Plusieurs personnes ont ce nom. Entrer le prenom : ");
-            scanf("%39s", prenom);
-            while (getchar() != '\n');
-            if (strcasecmp(current->personne->prenom, prenom) == 0) {
-                if (current->prev != NULL) {
-                    current->prev->next = current->next;
-                } else {
-                    liste = current->next;
-                }
-                if (current->next != NULL) {
-                    current->next->prev = current->prev;
-                }
-
-                printf("\n%s a bien ete supprimee.\n", nom);
-                free(current->personne);
-                free(current);
-                return liste;
-            }
+            count++;
         }
         current = current->next;
     }
 
-    printf("\n%s n'a pas ete trouvee dans votre repertoire.\n", nom);
+    if (count == 1) {
+        if (matching->prev != NULL) {
+            matching->prev->next = matching->next;
+        } else {
+            liste = matching->next;
+        }
+        if (matching->next != NULL) {
+            matching->next->prev = matching->prev;
+        }
+
+        printf("\n%s %s a bien ete supprime(e).\n", matching->personne->prenom, matching->personne->nom);
+        free(matching->personne);
+        free(matching);
+        return liste;
+    } else {
+        printf("Il existe plusieurs %s. Quel est son prenom ? : ", nom);
+        scanf("%39s", prenom);
+
+        matching = trouver_personne(liste, nom, prenom);
+        if (matching != NULL) {
+            if (matching->prev != NULL) {
+                matching->prev->next = matching->next;
+            } else {
+                liste = matching->next;
+            }
+            if (matching->next != NULL) {
+                matching->next->prev = matching->prev;
+            }
+
+            printf("\n%s %s a bien ete supprime(e).\n", matching->personne->prenom, matching->personne->nom);
+            free(matching->personne);
+            free(matching);
+        } else {
+            printf("\n%s %s n'a pas ete trouve(e) dans votre repertoire.\n", prenom, nom);
+        }
+    }
+
     return liste;
 }
 

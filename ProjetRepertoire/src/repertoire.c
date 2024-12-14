@@ -11,39 +11,34 @@ node_t *ajouter_personne(node_t *liste) {
         return liste;
     }
 
-    // Saisie du nom
     do {
         printf("Entrer le nom : ");
         scanf("%39s", personne->nom);
         if (!estValideNomPrenom(personne->nom)) {
             printf("Le nom doit contenir uniquement des lettres.\n");
+            while (getchar() != '\n');
         }
     } while (!estValideNomPrenom(personne->nom));
 
-    // Saisie du prenom
     do {
         printf("Entrer le prenom : ");
         scanf("%39s", personne->prenom);
         if (!estValideNomPrenom(personne->prenom)) {
             printf("Le prenom doit contenir uniquement des lettres.\n");
+            while (getchar() != '\n');
         }
     } while (!estValideNomPrenom(personne->prenom));
 
-    // Vérification des doublons
-    node_t *current = liste;
-    while (current != NULL) {
-        if (strcmp(current->personne->nom, personne->nom) == 0 && strcmp(current->personne->prenom, personne->prenom) == 0) {
-            printf("%s %s existe deja dans le repertoire.\n", personne->nom, personne->prenom);
-            free(personne);
-            return liste;
-        }
-        current = current->next;
+    // Vérification des doublons pour nom/prénom
+    while (estDoublonNomPrenom(liste, personne->nom, personne->prenom)) {
+        printf("%s %s existe deja dans le repertoire.\n", personne->nom, personne->prenom);
+        do {
+            printf("Entrer un autre prenom : ");
+            scanf("%39s", personne->prenom);
+            while (getchar() != '\n');
+        } while (!estValideNomPrenom(personne->prenom));
     }
 
-    //vérif des doublons pr le mail!!
-    //vérif des doublons pr le num de tél!!
-
-    // Saisie du numero de telephone
     do {
         printf("Entrer le numero de telephone : ");
         scanf("%39s", personne->numero_telephone);
@@ -52,19 +47,37 @@ node_t *ajouter_personne(node_t *liste) {
         }
     } while (!verifeNum(personne->numero_telephone));
 
-    // Saisie de l'adresse mail
+    // Vérification des doublons pour le num de tél
+    while (estDoublonNumTel(liste, personne->numero_telephone)) {
+        printf("Le numero de telephone %s existe deja dans le repertoire.\n", personne->numero_telephone);
+        do {
+            printf("Entrer un autre numero de telephone : ");
+            scanf("%39s", personne->numero_telephone);
+        } while (!verifeNum(personne->numero_telephone));
+    }
+
     do {
         printf("Entrer l'adresse mail : ");
         scanf("%39s", personne->adresse_mail);
         if (!verifMail(personne->adresse_mail)) {
             printf("L'adresse mail doit contenir un @ et un point.\n");
+            while (getchar() != '\n');
         }
     } while (!verifMail(personne->adresse_mail));
 
-    // Allocation d'un nouveau noeud
+    // Vérification des doublons pour le mail
+    while (estDoublonMail(liste, personne->adresse_mail)) {
+        printf("L'adresse mail %s existe deja dans le repertoire.\n", personne->adresse_mail);
+        do {
+            printf("Entrer une autre adresse mail : ");
+            scanf("%39s", personne->adresse_mail);
+            while (getchar() != '\n');
+        } while (!verifMail(personne->adresse_mail));
+    }
+
     node_t *node = malloc(sizeof(node_t));
     if (node == NULL) {
-        printf("Erreur d'allocation de memoire.\n");
+        printf("Erreur d'allocation de mémoire.\n");
         free(personne);
         return liste;
     }
@@ -77,7 +90,7 @@ node_t *ajouter_personne(node_t *liste) {
         liste->prev = node;
     }
 
-    printf("%s a bien ete ajoute dans le repertoire !\n", personne->nom);
+    printf("%s %s a bien ete ajoute(e) dans le repertoire !\n", personne->prenom, personne->nom);
 
     return node;
 }
@@ -110,8 +123,15 @@ void rechercher_personne(node_t *liste) {
     node_t *current = liste;
     while (current != NULL) {
         if (strcasecmp(current->personne->nom, nom) == 0) {
-            afficher_personne(current->personne);
-            return;
+            char prenom[40];
+            printf("Plusieurs personnes ont ce nom. Entrer le prenom : ");
+            scanf("%39s", prenom);
+            while (getchar() != '\n');
+
+            if (strcasecmp(current->personne->prenom, prenom) == 0) {
+                afficher_personne(current->personne);
+                return;
+            }
         }
         current = current->next;
     }
@@ -132,19 +152,25 @@ node_t *supprimer_personne(node_t *liste) {
     node_t *current = liste;
     while (current != NULL) {
         if (strcasecmp(current->personne->nom, nom) == 0) {
-            if (current->prev != NULL) {
-                current->prev->next = current->next;
-            } else {
-                liste = current->next;
-            }
-            if (current->next != NULL) {
-                current->next->prev = current->prev;
-            }
+            char prenom[40];
+            printf("Plusieurs personnes ont ce nom. Entrer le prenom : ");
+            scanf("%39s", prenom);
+            while (getchar() != '\n');
+            if (strcasecmp(current->personne->prenom, prenom) == 0) {
+                if (current->prev != NULL) {
+                    current->prev->next = current->next;
+                } else {
+                    liste = current->next;
+                }
+                if (current->next != NULL) {
+                    current->next->prev = current->prev;
+                }
 
-            printf("\n%s a bien ete supprimee.\n", nom);
-            free(current->personne);
-            free(current);
-            return liste;
+                printf("\n%s a bien ete supprimee.\n", nom);
+                free(current->personne);
+                free(current);
+                return liste;
+            }
         }
         current = current->next;
     }

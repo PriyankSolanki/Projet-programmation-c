@@ -78,3 +78,37 @@ bool verifMail(char* str) {
     }
     return aro && point;
 }
+
+bool estDoublonNomPrenom(node_t *liste, const char *nom, const char *prenom) {
+    node_t *current = liste;
+    while (current != NULL) {
+        if (strcasecmp(current->personne->nom, nom) == 0 &&
+            strcasecmp(current->personne->prenom, prenom) == 0) {
+            return true;
+            }
+        current = current->next;
+    }
+    return false;
+}
+
+bool estDoublonNumTel(node_t *liste, const char *numero) {
+    node_t *current = liste;
+    while (current != NULL) {
+        if (strcmp(current->personne->numero_telephone, numero) == 0) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}
+
+bool estDoublonMail(node_t *liste, const char *mail) {
+    node_t *current = liste;
+    while (current != NULL) {
+        if (strcasecmp(current->personne->adresse_mail, mail) == 0) {
+            return true;
+        }
+        current = current->next;
+    }
+    return false;
+}

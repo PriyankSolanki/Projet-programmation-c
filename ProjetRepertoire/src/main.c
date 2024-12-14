@@ -40,9 +40,10 @@ int main() {
         printf("\n\t5. Quitter\n");
         printf("\nEntrez votre choix : ");
 
-        if (scanf("%d", &fonctionnalite) != 1 || fonctionnalite < 1 || fonctionnalite > 5) {
+        char buffer[10];
+        fgets(buffer, sizeof(buffer), stdin);
+        if (sscanf(buffer, "%d", &fonctionnalite) != 1 || fonctionnalite < 1 || fonctionnalite > 5) {
             printf("Choisissez un chiffre entre 1 et 5.\n");
-            while (getchar() != '\n');
             continue;
         }
 

@@ -12,30 +12,61 @@
 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" id="logo">
 
 <h2>Ajouter un contact</h2>
-<form method="POST" action="/ajouter">
-  <input type="text" name="nom" placeholder="Nom" required>
-  <input type="text" name="prenom" placeholder="Prénom" required>
-  <input type="number" name="tel" placeholder="Numéro de téléphone" required>
-  <input type="email" name="mail" placeholder="Adresse mail" required>
-  <button type="submit">Ajouter</button>
-</form>
+
+<!-- Affichage du message d'erreur s'il y en a -->
+{% if erreur %}
+<div style="color: red; font-weight: bold;">{{ erreur }}</div>
+{% endif %}
+
+<!-- Formulaire pour ajouter un contact -->
+<div class="form-container">
+  <form method="POST" action="/ajouter" class="form-ajout">
+    <input type="text" name="nom" placeholder="Nom" required pattern="^[A-Za-zÀ-ÿà-ÿÉéÈèÊêËëÎîÏïÔôÖöÙùÛûÜüÇç- ]+$" title="Le nom ne peut contenir que des lettres, des accents, des tirets et des espaces.">
+    <input type="text" name="prenom" placeholder="Prénom" required pattern="^[A-Za-zÀ-ÿà-ÿÉéÈèÊêËëÎîÏïÔôÖöÙùÛûÜüÇç- ]+$" title="Le prénom ne peut contenir que des lettres, des accents, des tirets et des espaces.">
+    <input type="tel" name="tel" placeholder="Numéro de téléphone (10 chiffres)" required pattern="^\d{10}$" title="Le numéro de téléphone doit être composé de 10 chiffres.">
+    <input type="email" name="mail" placeholder="Adresse mail" required>
+    <button type="submit">Ajouter</button>
+  </form>
+
+  <!-- Formulaire de recherche -->
+  <div class="form-recherche">
+    <form method="POST" action="/rechercher">
+      <input type="text" name="recherche" placeholder="Nom ou prénom" required>
+      <button type="submit">Rechercher</button>
+
+    </form>
+    <button class="reset-button" onclick="initialize()">Réinitialiser</button>
+  </div>
+
+</div>
 
 <h2>Contacts</h2>
-<ul>
+<div class="contacts-container">
   {% for contact in repertoire %}
-  <li>
-    <span>{{ contact.nom }} {{ contact.prenom }}</span>
-    <span>{{ contact.tel }}</span>
-    <span>{{ contact.mail }}</span>
-  </li>
+  <div class="contact-box">
+    <h3>Nom : {{ contact.nom }}</h3>
+    <p>Prénom : {{ contact.prenom }}</p>
+    <p>Téléphone : {{ contact.tel }}</p>
+    <p>Email : {{ contact.mail }}</p>
+    <button onclick="confirmDelete('{{ contact.nom }}', '{{ contact.prenom }}')">Supprimer</button>
+  </div>
   {% endfor %}
-</ul>
+</div>
 
-<h2>Supprimer un contact</h2>
-<form method="POST" action="/supprimer">
-  <input type="text" name="nom" placeholder="Nom" required>
-  <input type="text" name="prenom" placeholder="Prénom" required>
-  <button type="submit">Supprimer</button>
-</form>
+<script>
+  function confirmDelete(nom, prenom) {
+    var isConfirmed = confirm("Êtes-vous sûr de vouloir supprimer le contact " + nom + " " + prenom + " ?");
+    if (isConfirmed) {
+      var url = "/supprimer_contact/" + encodeURIComponent(nom) + "/" + encodeURIComponent(prenom);
+      window.location.href = url;
+    }
+  }
+
+  function initialize() {
+    var url = "/";
+    window.location.href = url;
+  }
+</script>
+
 </body>
 </html>

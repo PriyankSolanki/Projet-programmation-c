@@ -15,6 +15,12 @@
 #include <stdlib.h>
 #include <string.h>
 
+
+void vider_tampon() {
+    int c;
+    while ((c = getchar()) != '\n' && c != EOF);
+}
+
 /**
  * @brief Ajoute une personne au répertoire.
  *
@@ -34,21 +40,21 @@ node_t *ajouter_personne(node_t *liste) {
 
     do {
         printf("Entrer le nom : ");
-        scanf("%39s", personne->nom);
-        while (getchar() != '\n');
+        fgets(personne->nom, sizeof(personne->nom), stdin);
+        personne->nom[strcspn(personne->nom, "\n")] = '\0'; // Supprimer le caractère de nouvelle ligne
+
         if (!estValideNomPrenom(personne->nom)) {
-            printf("Le nom doit contenir uniquement des lettres.\n");
-            while (getchar() != '\n');
+            printf("Le nom doit contenir uniquement des lettres, des tirets ou des espaces.\n");
         }
     } while (!estValideNomPrenom(personne->nom));
 
     do {
         printf("Entrer le prenom : ");
-        scanf("%39s", personne->prenom);
-        while (getchar() != '\n');
+        fgets(personne->prenom, sizeof(personne->prenom), stdin);
+        personne->prenom[strcspn(personne->prenom, "\n")] = '\0'; // Supprimer le caractère de nouvelle ligne
+
         if (!estValideNomPrenom(personne->prenom)) {
-            printf("Le prenom doit contenir uniquement des lettres.\n");
-            while (getchar() != '\n');
+            printf("Le prenom doit contenir uniquement des lettres, des tirets ou des espaces.\n");
         }
     } while (!estValideNomPrenom(personne->prenom));
 
@@ -58,13 +64,14 @@ node_t *ajouter_personne(node_t *liste) {
         do {
             printf("Entrer un autre prenom : ");
             scanf("%39s", personne->prenom);
-            while (getchar() != '\n');
+            vider_tampon();
         } while (!estValideNomPrenom(personne->prenom));
     }
 
     do {
         printf("Entrer le numero de telephone : ");
         scanf("%39s", personne->numero_telephone);
+        vider_tampon();
         if (!verifNum(personne->numero_telephone)) {
             printf("Le numero de telephone doit contenir 10 chiffres.\n");
         }
@@ -76,15 +83,16 @@ node_t *ajouter_personne(node_t *liste) {
         do {
             printf("Entrer un autre numero de telephone : ");
             scanf("%39s", personne->numero_telephone);
+            vider_tampon();
         } while (!verifNum(personne->numero_telephone));
     }
 
     do {
         printf("Entrer l'adresse mail : ");
         scanf("%39s", personne->adresse_mail);
+        vider_tampon();
         if (!verifMail(personne->adresse_mail)) {
             printf("L'adresse mail doit contenir un @ et un point.\n");
-            while (getchar() != '\n');
         }
     } while (!verifMail(personne->adresse_mail));
 
@@ -94,14 +102,14 @@ node_t *ajouter_personne(node_t *liste) {
         do {
             printf("Entrer une autre adresse mail : ");
             scanf("%39s", personne->adresse_mail);
-            while (getchar() != '\n');
+            vider_tampon();
         } while (!verifMail(personne->adresse_mail));
     }
 
     // Création et insertion du nouveau noeud
     node_t *node = malloc(sizeof(node_t));
     if (node == NULL) {
-        printf("Erreur d'allocation de mémoire.\n");
+        printf("Erreur d'allocation de memoire.\n");
         free(personne);
         return liste;
     }
@@ -170,7 +178,7 @@ node_t *trouver_personne(node_t *liste, const char *nom, const char *prenom) {
  * @brief Recherche une personne dans le répertoire.
  *
  * Cette fonction cherche un contact par nom et éventuellement par prénom.
- * Si plusieurs contacts ont le même nom, elle demande le prénom pour affiner la recherche.
+ * Elle accepte les noms avec des espaces, des tirets et des caractères spéciaux valides.
  *
  * @param liste Pointeur vers la tête de la liste des contacts.
  */
@@ -181,17 +189,18 @@ void rechercher_personne(node_t *liste) {
     }
 
     char nom[40], prenom[40];
-    printf("\nEntrer le nom que vous voulez chercher : ");
-    scanf("%39s", nom);
+    printf("\nEntrez le nom que vous voulez chercher : ");
+    fgets(nom, sizeof(nom), stdin);
+    nom[strcspn(nom, "\n")] = '\0';
 
     node_t *matching = trouver_personne(liste, nom, NULL);
     if (matching == NULL) {
-        printf("\nIl n'existe pas de personne avec le nom %s dans le repertoire.\n", nom);
+        printf("\n%s n'a ete trouve(e) dans le repertoire.\n", nom);
         return;
     }
 
-    node_t *current = liste;
     int count = 0;
+    node_t *current = liste;
     while (current != NULL) {
         if (strcasecmp(current->personne->nom, nom) == 0) {
             count++;
@@ -200,16 +209,19 @@ void rechercher_personne(node_t *liste) {
     }
 
     if (count == 1) {
+        printf("\nContact trouve :\n");
         afficher_personne(matching->personne);
     } else {
-        printf("Il existe plusieurs %s. Quel est son prenom ? : ", nom);
-        scanf("%39s", prenom);
+        printf("Il existe plusieurs personnes avec le nom %s. Quel est son prenom ? : ", nom);
+        fgets(prenom, sizeof(prenom), stdin);
+        prenom[strcspn(prenom, "\n")] = '\0';
 
         matching = trouver_personne(liste, nom, prenom);
         if (matching != NULL) {
+            printf("\nContact trouve :\n");
             afficher_personne(matching->personne);
         } else {
-            printf("\nIl n'y a aucune personne avec le prenom %s et le nom %s dans votre repertoire.\n", prenom, nom);
+            printf("\nAucun contact avec le nom '%s' et le prenom '%s' n'a ete trouve.\n", nom, prenom);
         }
     }
 }
@@ -218,7 +230,7 @@ void rechercher_personne(node_t *liste) {
  * @brief Supprime une personne du répertoire.
  *
  * Cette fonction supprime un contact par nom et éventuellement par prénom si plusieurs contacts
- * partagent le même nom. Une confirmation est demandée avant la suppression.
+ * partagent le même nom. Elle accepte les noms avec des espaces, des tirets et des caractères spéciaux valides.
  *
  * @param liste Pointeur vers la tête de la liste des contacts.
  * @return node_t* Pointeur vers la nouvelle tête de la liste après suppression.
@@ -231,7 +243,8 @@ node_t *supprimer_personne(node_t *liste) {
 
     char nom[40], prenom[40];
     printf("\nEntrez le nom de la personne que vous souhaitez supprimer : ");
-    scanf("%39s", nom);
+    fgets(nom, sizeof(nom), stdin);
+    nom[strcspn(nom, "\n")] = '\0';
 
     node_t *matching = trouver_personne(liste, nom, NULL);
     if (matching == NULL) {
@@ -249,8 +262,9 @@ node_t *supprimer_personne(node_t *liste) {
     }
 
     if (count > 1) {
-        printf("Il existe plusieurs personnes avec le nom %s. Quel est son prenom ? : ", nom);
-        scanf("%39s", prenom);
+        printf("Il existe plusieurs personnes avec le nom '%s'. Quel est son prenom ? : ", nom);
+        fgets(prenom, sizeof(prenom), stdin);
+        prenom[strcspn(prenom, "\n")] = '\0';
 
         matching = trouver_personne(liste, nom, prenom);
         if (matching == NULL) {
@@ -265,6 +279,7 @@ node_t *supprimer_personne(node_t *liste) {
     char confirmation;
     printf("\nVoulez-vous vraiment supprimer %s %s ? (o/n) : ", prenom, nom);
     scanf(" %c", &confirmation);
+    vider_tampon();
     if (tolower(confirmation) != 'o') {
         printf("Suppression annulee.\n");
         return liste;
@@ -307,19 +322,23 @@ void sauvegarder_repertoire(node_t *liste, const char *filename) {
 
     node_t *current = liste;
     while (current != NULL) {
-        fprintf(fichier, "%s;%s;%s;%s\n", current->personne->nom, current->personne->prenom,
-                current->personne->numero_telephone, current->personne->adresse_mail);
+        fprintf(fichier, "%s;%s;%s;%s\n",
+                current->personne->nom,
+                current->personne->prenom,
+                current->personne->numero_telephone,
+                current->personne->adresse_mail);
         current = current->next;
     }
 
     fclose(fichier);
 }
 
+
 node_t* charger_repertoire(const char *filename) {
     FILE *fichier = fopen(filename, "r");
     if (fichier == NULL) {
         printf("Fichier '%s' introuvable. Creation d'un nouveau repertoire.\n", filename);
-        fichier = fopen(filename, "w");
+        fichier = fopen(filename, "w, ccs=UTF-8");
         if (fichier == NULL) {
             printf("Impossible de creer le fichier '%s'.", filename);
             return NULL;
@@ -333,9 +352,33 @@ node_t* charger_repertoire(const char *filename) {
     char ligne[200];
 
     while (fgets(ligne, sizeof(ligne), fichier)) {
-        personne_t *nouvelle_personne = malloc(sizeof(personne_t));
-        if (sscanf(ligne, "%39[^;];%39[^;];%39[^;];%39[^\n]", nouvelle_personne->nom, nouvelle_personne->prenom,
-                   nouvelle_personne->numero_telephone, nouvelle_personne->adresse_mail) == 4) {
+        ligne[strcspn(ligne, "\n")] = '\0';
+
+        char *nom = strtok(ligne, ";");
+        char *prenom = strtok(NULL, ";");
+        char *numero_telephone = strtok(NULL, ";");
+        char *adresse_mail = strtok(NULL, ";");
+
+        if (nom && prenom && numero_telephone && adresse_mail) {
+            personne_t *nouvelle_personne = malloc(sizeof(personne_t));
+            if (nouvelle_personne == NULL) {
+                printf("Erreur d'allocation de memoire.\n");
+                fclose(fichier);
+                return repertoire;
+            }
+
+            strncpy(nouvelle_personne->nom, nom, sizeof(nouvelle_personne->nom) - 1);
+            nouvelle_personne->nom[sizeof(nouvelle_personne->nom) - 1] = '\0';
+
+            strncpy(nouvelle_personne->prenom, prenom, sizeof(nouvelle_personne->prenom) - 1);
+            nouvelle_personne->prenom[sizeof(nouvelle_personne->prenom) - 1] = '\0';
+
+            strncpy(nouvelle_personne->numero_telephone, numero_telephone, sizeof(nouvelle_personne->numero_telephone) - 1);
+            nouvelle_personne->numero_telephone[sizeof(nouvelle_personne->numero_telephone) - 1] = '\0';
+
+            strncpy(nouvelle_personne->adresse_mail, adresse_mail, sizeof(nouvelle_personne->adresse_mail) - 1);
+            nouvelle_personne->adresse_mail[sizeof(nouvelle_personne->adresse_mail) - 1] = '\0';
+
             node_t *nouveau_noeud = malloc(sizeof(node_t));
             if (nouveau_noeud == NULL) {
                 printf("Erreur d'allocation de memoire.\n");
@@ -355,7 +398,9 @@ node_t* charger_repertoire(const char *filename) {
             }
 
             dernier = nouveau_noeud;
-                   }
+        } else {
+            printf("Ligne invalide dans le fichier : %s\n", ligne);
+        }
     }
 
     fclose(fichier);

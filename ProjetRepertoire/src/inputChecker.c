@@ -19,6 +19,8 @@
 #include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
+#include <wctype.h>
+#include <stdbool.h>
 
 /**
  * @brief Vérifie si une chaîne est un nom ou un prénom valide.
@@ -28,18 +30,27 @@
  * @param str Chaîne à vérifier.
  * @return true si la chaîne est valide, false sinon.
  */
-bool estValideNomPrenom(char* str){
-	if (strlen(str)<=0){
-		return false;
-	}
-	int i=0;
-	while (str[i]!='\0'){
-		if (str[i] =='0' || str[i] =='1' || str[i] =='2' || str[i] =='3' || str[i] =='4' || str[i] =='5' || str[i] =='6' || str[i] =='7' || str[i] =='8' || str[i] =='9'){
-			return false;
-		}
-		i++;
-	}
-	return true;
+
+bool estValideNomPrenom(const char *nom_prenom) {
+    int len = strlen(nom_prenom);
+
+    if (len == 0) {
+        return false;
+    }
+
+    for (int i = 0; i < len; i++) {
+        char c = nom_prenom[i];
+
+        if (!iswalpha((wint_t)c) && c != '-' && c != ' ') {
+            return false;
+        }
+
+        if ((c == '-' || c == ' ') && (i == 0 || i == len - 1 || nom_prenom[i + 1] == '-' || nom_prenom[i + 1] == ' ')) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 /**

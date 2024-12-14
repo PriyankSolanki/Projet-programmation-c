@@ -297,3 +297,67 @@ void afficher_personne(personne_t *personne) {
     printf("\tNumero de telephone : %s\n", personne->numero_telephone);
     printf("\tAdresse mail : %s\n", personne->adresse_mail);
 }
+
+void sauvegarder_repertoire(node_t *liste, const char *filename) {
+    FILE *fichier = fopen(filename, "w");
+    if (fichier == NULL) {
+        printf("Erreur d'ouverture du fichier.\n");
+        return;
+    }
+
+    node_t *current = liste;
+    while (current != NULL) {
+        fprintf(fichier, "%s;%s;%s;%s\n", current->personne->nom, current->personne->prenom,
+                current->personne->numero_telephone, current->personne->adresse_mail);
+        current = current->next;
+    }
+
+    fclose(fichier);
+}
+
+node_t* charger_repertoire(const char *filename) {
+    FILE *fichier = fopen(filename, "r");
+    if (fichier == NULL) {
+        printf("Fichier '%s' introuvable. Creation d'un nouveau repertoire.\n", filename);
+        fichier = fopen(filename, "w");
+        if (fichier == NULL) {
+            printf("Impossible de creer le fichier '%s'.", filename);
+            return NULL;
+        }
+        fclose(fichier);
+        return NULL;
+    }
+
+    node_t *repertoire = NULL;
+    node_t *dernier = NULL;
+    char ligne[200];
+
+    while (fgets(ligne, sizeof(ligne), fichier)) {
+        personne_t *nouvelle_personne = malloc(sizeof(personne_t));
+        if (sscanf(ligne, "%39[^;];%39[^;];%39[^;];%39[^\n]", nouvelle_personne->nom, nouvelle_personne->prenom,
+                   nouvelle_personne->numero_telephone, nouvelle_personne->adresse_mail) == 4) {
+            node_t *nouveau_noeud = malloc(sizeof(node_t));
+            if (nouveau_noeud == NULL) {
+                printf("Erreur d'allocation de memoire.\n");
+                free(nouvelle_personne);
+                fclose(fichier);
+                return repertoire;
+            }
+
+            nouveau_noeud->personne = nouvelle_personne;
+            nouveau_noeud->next = NULL;
+            nouveau_noeud->prev = dernier;
+
+            if (dernier != NULL) {
+                dernier->next = nouveau_noeud;
+            } else {
+                repertoire = nouveau_noeud;
+            }
+
+            dernier = nouveau_noeud;
+                   }
+    }
+
+    fclose(fichier);
+    return repertoire;
+}

@@ -99,4 +99,7 @@ void afficher_personne(personne_t *personne);
  */
 node_t *trouver_personne(node_t *liste, const char *nom, const char *prenom);
 
+node_t* charger_repertoire(const char *filename);
+
+void sauvegarder_repertoire(node_t *liste, const char *filename);
 #endif // REPERTOIRE_H

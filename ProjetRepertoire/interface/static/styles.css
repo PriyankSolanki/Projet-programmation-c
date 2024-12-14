@@ -1,0 +1,116 @@
+/* Styles CSS */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #ffffff;
+    color: #6A0DAD;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+}
+
+h1 {
+    font-size: 2.5em;
+    color: #6A0DAD;
+    margin-bottom: 20px;
+}
+
+h2 {
+    font-size: 1.8em;
+    color: #6A0DAD;
+    margin-top: 30px;
+    margin-bottom: 15px;
+}
+
+form {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 500px;
+    margin-bottom: 30px;
+}
+
+form input, form button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1em;
+}
+
+form input[type="text"],
+form input[type="email"],
+form input[type="number"] {
+    font-family: Arial, sans-serif;
+}
+
+form button {
+    background-color: #6A0DAD;
+    color: white;
+    border: none;
+    cursor: pointer;
+}
+
+form button:hover {
+    background-color: #5a0b94;
+}
+
+/* listes */
+ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+    max-width: 500px;
+}
+
+ul li {
+    background-color: #fff;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+ul li span {
+    font-weight: bold;
+    color: #6A0DAD;
+}
+
+ul li:hover {
+    background-color: #f1f1f1;
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px;
+    }
+
+    form {
+        width: 100%;
+    }
+
+    h1 {
+        font-size: 2em;
+    }
+
+    h2 {
+        font-size: 1.5em;
+    }
+}
+
+#logo {
+    width: 300px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+}

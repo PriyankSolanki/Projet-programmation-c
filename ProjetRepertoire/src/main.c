@@ -22,9 +22,13 @@
 #include "../include/repertoire.h"
 #include <stdio.h>
 
+
+#define FICHIER_REPERTOIRE "repertoire.txt"
+
 int main() {
     int fonctionnalite;
-    node_t *repertoire = NULL;
+    // node_t *repertoire = NULL;
+    node_t *repertoire = charger_repertoire(FICHIER_REPERTOIRE);
 
     printf("Bienvenue a toi !");
     while (true) {
@@ -47,6 +51,7 @@ int main() {
         switch (fonctionnalite) {
             case 1:
                 repertoire = ajouter_personne(repertoire);
+                sauvegarder_repertoire(repertoire, FICHIER_REPERTOIRE);
             break;
             case 2:
                 afficher_repertoire(repertoire);
@@ -56,10 +61,12 @@ int main() {
             break;
             case 4:
                 repertoire = supprimer_personne(repertoire);
+                sauvegarder_repertoire(repertoire, FICHIER_REPERTOIRE);
             break;
         }
     }
 
     printf("\nMerci de votre visite !\n");
+    sauvegarder_repertoire(repertoire, FICHIER_REPERTOIRE);
     return 0;
 }

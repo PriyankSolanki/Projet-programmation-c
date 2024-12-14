@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sat Sol Sas Répo</title>
+  <link rel="icon" href="{{ url_for('static', filename='images/fav.ico') }}" type="image/x-icon">
+  <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+<h1>Répertoire de vos contacts</h1>
+<img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" id="logo">
+
+<h2>Ajouter un contact</h2>
+<form method="POST" action="/ajouter">
+  <input type="text" name="nom" placeholder="Nom" required>
+  <input type="text" name="prenom" placeholder="Prénom" required>
+  <input type="number" name="tel" placeholder="Numéro de téléphone" required>
+  <input type="email" name="mail" placeholder="Adresse mail" required>
+  <button type="submit">Ajouter</button>
+</form>
+
+<h2>Contacts</h2>
+<ul>
+  {% for contact in repertoire %}
+  <li>
+    <span>{{ contact.nom }} {{ contact.prenom }}</span>
+    <span>{{ contact.tel }}</span>
+    <span>{{ contact.mail }}</span>
+  </li>
+  {% endfor %}
+</ul>
+
+<h2>Supprimer un contact</h2>
+<form method="POST" action="/supprimer">
+  <input type="text" name="nom" placeholder="Nom" required>
+  <input type="text" name="prenom" placeholder="Prénom" required>
+  <button type="submit">Supprimer</button>
+</form>
+</body>
+</html>

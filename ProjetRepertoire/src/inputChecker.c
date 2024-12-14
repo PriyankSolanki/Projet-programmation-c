@@ -1,3 +1,19 @@
+/**
+* @file inputChecker.c
+ * @brief Implémentation des fonctions de vérification des entrées utilisateur.
+ *
+ * Ce fichier contient des fonctions utilisées pour vérifier les entrées de l'utilisateur de notre programme de gestion de répertoire.
+ * Les fonctions incluent des vérifications pour des éléments comme le nom, le prénom, le numéro de téléphone et l'adresse e-mail.
+ * Des fonctions sont également présentes pour détecter les doublons dans le répertoire basé sur ces informations.
+ *
+ * Les principales fonctionnalités sont :
+ * - Vérification de la validité d'un nom ou prénom (contenant uniquement des lettres).
+ * - Vérification de la validité d'un numéro de téléphone (formats "0XXXXXXXXX" ou "+33XXXXXXXX").
+ * - Vérification de la validité d'une adresse e-mail (contenant un "@" et un "." après).
+ * - Détection de doublons pour un nom/prénom, un numéro de téléphone ou une adresse e-mail dans le répertoire.
+ *
+ */
+
 #include "../include/repertoire.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -31,7 +47,7 @@ bool estValideNomPrenom(char* str){
  *
  * Un numéro valide doit :
  * - Commencer par '0' et contenir exactement 10 chiffres, ou
- * - Commencer par '+33' et contenir exactement 12 caractères (dont le préfixe).
+ * - Commencer par '+33' et contenir exactement 12 caractères en tout.
  *
  * @param str Chaîne représentant le numéro de téléphone.
  * @return true si le numéro est valide, false sinon.

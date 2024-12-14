@@ -1,3 +1,11 @@
+/**
+* @file repertoire.c
+ * @brief Implémentation des fonctions de gestion du répertoire de contacts.
+ *
+ * Ce fichier contient les fonctions pour ajouter, afficher, rechercher et supprimer des contacts
+ * dans un répertoire implémenté sous forme de liste doublement chaînée.
+ */
+
 #include "../include/repertoire.h"
 
 #include <ctype.h>
@@ -7,6 +15,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+ * @brief Ajoute une personne au répertoire.
+ *
+ * Cette fonction demande à l'utilisateur de saisir les informations d'une personne (nom, prénom,
+ * numéro de téléphone, adresse mail) et vérifie qu'elles sont valides et uniques avant de l'ajouter
+ * au début de la liste chaînée.
+ *
+ * @param liste Pointeur vers la tête de la liste des contacts.
+ * @return node_t* Pointeur vers la nouvelle tête de la liste après ajout.
+ */
 node_t *ajouter_personne(node_t *liste) {
     personne_t *personne = malloc(sizeof(personne_t));
     if (personne == NULL) {
@@ -80,6 +98,7 @@ node_t *ajouter_personne(node_t *liste) {
         } while (!verifMail(personne->adresse_mail));
     }
 
+    // Création et insertion du nouveau noeud
     node_t *node = malloc(sizeof(node_t));
     if (node == NULL) {
         printf("Erreur d'allocation de mémoire.\n");
@@ -100,6 +119,13 @@ node_t *ajouter_personne(node_t *liste) {
     return node;
 }
 
+/**
+ * @brief Affiche tous les contacts du répertoire.
+ *
+ * Cette fonction parcourt la liste chaînée et affiche les informations de chaque contact.
+ *
+ * @param liste Pointeur vers la tête de la liste des contacts.
+ */
 void afficher_repertoire(node_t *liste) {
     if (liste == NULL) {
         printf("\nLe repertoire est vide.\n");
@@ -115,6 +141,19 @@ void afficher_repertoire(node_t *liste) {
     }
 }
 
+/**
+ * @brief Recherche une personne dans le répertoire.
+ *
+ * Cette fonction parcourt la liste chaînée des contacts et cherche une personne en fonction du nom
+ * et, si fourni, du prénom. Elle compare les noms de manière insensible à la casse. Si un prénom est
+ * spécifié, il est également comparé de manière insensible à la casse. Si la personne est trouvée,
+ * la fonction retourne le pointeur vers le noeud correspondant. Sinon, elle retourne NULL.
+ *
+ * @param liste Pointeur vers la tête de la liste des contacts.
+ * @param nom Le nom de la personne à rechercher.
+ * @param prenom Le prénom de la personne à rechercher (peut être NULL si non utilisé).
+ * @return node_t* Pointeur vers le noeud contenant la personne recherchée, ou NULL si non trouvée.
+ */
 node_t *trouver_personne(node_t *liste, const char *nom, const char *prenom) {
     node_t *current = liste;
     while (current != NULL) {
@@ -127,6 +166,14 @@ node_t *trouver_personne(node_t *liste, const char *nom, const char *prenom) {
     return NULL;
 }
 
+/**
+ * @brief Recherche une personne dans le répertoire.
+ *
+ * Cette fonction cherche un contact par nom et éventuellement par prénom.
+ * Si plusieurs contacts ont le même nom, elle demande le prénom pour affiner la recherche.
+ *
+ * @param liste Pointeur vers la tête de la liste des contacts.
+ */
 void rechercher_personne(node_t *liste) {
     if (liste == NULL) {
         printf("\nLe repertoire est vide.\n");
@@ -167,6 +214,15 @@ void rechercher_personne(node_t *liste) {
     }
 }
 
+/**
+ * @brief Supprime une personne du répertoire.
+ *
+ * Cette fonction supprime un contact par nom et éventuellement par prénom si plusieurs contacts
+ * partagent le même nom. Une confirmation est demandée avant la suppression.
+ *
+ * @param liste Pointeur vers la tête de la liste des contacts.
+ * @return node_t* Pointeur vers la nouvelle tête de la liste après suppression.
+ */
 node_t *supprimer_personne(node_t *liste) {
     if (liste == NULL) {
         printf("\nLe repertoire est vide.\n");
@@ -230,6 +286,11 @@ node_t *supprimer_personne(node_t *liste) {
     return liste;
 }
 
+/**
+ * @brief Affiche les informations d'une personne.
+ *
+ * @param personne Pointeur vers la structure contenant les informations de la personne.
+ */
 void afficher_personne(personne_t *personne) {
     printf("\tNom : %s\n", personne->nom);
     printf("\tPrenom : %s\n", personne->prenom);

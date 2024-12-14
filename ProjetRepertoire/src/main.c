@@ -1,3 +1,24 @@
+/**
+* @file main.c
+ * @brief Programme principal pour la gestion du répertoire de contacts.
+ *
+ * Ce programme permet à l'utilisateur d'ajouter, afficher, rechercher et supprimer des contacts
+ * dans un répertoire, implémenté sous forme de liste chaînée. L'utilisateur
+ * interagit avec le programme via un menu.
+ *
+ * Les fonctionnalités proposées sont :
+ * - Ajouter une personne au répertoire
+ * - Afficher tous les contacts du répertoire
+ * - Rechercher une personne dans le répertoire
+ * - Supprimer une personne du répertoire
+ * - Quitter le programme
+ *
+ * Le programme continue de s'exécuter jusqu'à ce que l'utilisateur choisisse de le quitter.
+ *
+ * @author SATKUNARAJAH Sarusman, SOLAKI Priyank & SASIKUMAR Sahkana
+ *
+ */
+
 #include "../include/repertoire.h"
 #include <stdio.h>
 

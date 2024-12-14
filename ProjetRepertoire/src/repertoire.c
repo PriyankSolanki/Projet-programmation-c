@@ -32,13 +32,16 @@ node_t *ajouter_personne(node_t *liste) {
     // Vérification des doublons
     node_t *current = liste;
     while (current != NULL) {
-        if (strcmp(current->personne->nom, personne->nom) == 0) {
-            printf("%s existe deja dans le repertoire.\n", personne->nom);
+        if (strcmp(current->personne->nom, personne->nom) == 0 && strcmp(current->personne->prenom, personne->prenom) == 0) {
+            printf("%s %s existe deja dans le repertoire.\n", personne->nom, personne->prenom);
             free(personne);
             return liste;
         }
         current = current->next;
     }
+
+    //vérif des doublons pr le mail!!
+    //vérif des doublons pr le num de tél!!
 
     // Saisie du numero de telephone
     do {
@@ -73,6 +76,8 @@ node_t *ajouter_personne(node_t *liste) {
     if (liste != NULL) {
         liste->prev = node;
     }
+
+    printf("%s a bien ete ajoute dans le repertoire !\n", personne->nom);
 
     return node;
 }

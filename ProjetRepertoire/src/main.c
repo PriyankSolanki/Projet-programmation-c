@@ -7,12 +7,13 @@ int main() {
 
     printf("Bienvenue a toi !");
     while (true) {
-        printf("\nGestion du repertoire :");
+        printf("\nQue voulez-vous faire ?");
         printf("\n\t1. Ajouter une personne");
         printf("\n\t2. Afficher le repertoire");
         printf("\n\t3. Rechercher une personne");
         printf("\n\t4. Supprimer une personne");
         printf("\n\t5. Quitter\n");
+        printf("\nEntrez votre choix : ");
         scanf("%d", &fonctionnalite);
 
         if (fonctionnalite == 5) break;
@@ -35,6 +36,6 @@ int main() {
         }
     }
 
-    printf("\nMerci de ta visite !\n");
+    printf("\nMerci de votre visite !\n");
     return 0;
 }

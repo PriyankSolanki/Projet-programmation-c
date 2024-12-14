@@ -14,7 +14,12 @@ int main() {
         printf("\n\t4. Supprimer une personne");
         printf("\n\t5. Quitter\n");
         printf("\nEntrez votre choix : ");
-        scanf("%d", &fonctionnalite);
+
+        if (scanf("%d", &fonctionnalite) != 1 || fonctionnalite < 1 || fonctionnalite > 5) {
+            printf("Choisissez un chiffre entre 1 et 5.\n");
+            while (getchar() != '\n');
+            continue;
+        }
 
         if (fonctionnalite == 5) break;
 
@@ -31,8 +36,6 @@ int main() {
             case 4:
                 repertoire = supprimer_personne(repertoire);
             break;
-            default:
-                printf("Option invalide.\n");
         }
     }
 

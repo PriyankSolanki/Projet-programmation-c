@@ -85,16 +85,14 @@ def supprimer_contact(nom, prenom):
 
     return redirect(url_for('index'))
 
-
 @app.route('/rechercher', methods=['POST'])
 def rechercher():
     recherche = request.form['recherche']
     repertoire = lire_repertoire()
 
-    # Filtrer les contacts qui contiennent la recherche dans le nom ou le prénom
     repertoire_filtré = [r for r in repertoire if recherche.lower() in r['nom'].lower() or recherche.lower() in r['prenom'].lower()]
 
-    return render_template('index.html', repertoire=repertoire_filtré, erreur=None)
+    return render_template('index.html', repertoire=repertoire, resultats=repertoire_filtré, erreur=None)
 
 if __name__ == '__main__':
     app.run(debug=True)

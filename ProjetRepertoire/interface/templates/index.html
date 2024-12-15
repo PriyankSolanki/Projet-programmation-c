@@ -22,6 +22,7 @@
 <div id="accueil" class="tab-content active">
   <h2>Contacts</h2>
   <div class="contacts-container">
+    {% if repertoire %}
     {% for contact in repertoire %}
     <div class="contact-box">
       <h3>Nom : {{ contact.nom }}</h3>
@@ -31,6 +32,9 @@
       <button onclick="confirmDelete('{{ contact.nom }}', '{{ contact.prenom }}')">Supprimer</button>
     </div>
     {% endfor %}
+    {% else %}
+    <p>Aucun contact trouvé.</p>
+    {% endif %}
   </div>
 </div>
 
@@ -60,6 +64,7 @@
 
   <!-- Affichage des résultats -->
   <div class="contacts-container">
+    {% if resultats %}
     {% for contact in resultats %}
     <div class="contact-box">
       <h3>Nom : {{ contact.nom }}</h3>
@@ -69,24 +74,21 @@
       <button onclick="confirmDelete('{{ contact.nom }}', '{{ contact.prenom }}')">Supprimer</button>
     </div>
     {% endfor %}
+    {% else %}
+    <p>Vous n'avez aucun contact dans votre répertoire.</p>
+    {% endif %}
   </div>
 </div>
 
-
 <script>
   function showTab(tabId) {
-    // Cacher tous les contenus
     const contents = document.querySelectorAll('.tab-content');
     contents.forEach(content => content.classList.remove('active'));
 
-    // Retirer la classe active de tous les boutons
     const buttons = document.querySelectorAll('.tab-button');
     buttons.forEach(button => button.classList.remove('active'));
 
-    // Afficher le contenu correspondant
     document.getElementById(tabId).classList.add('active');
-
-    // Activer le bouton correspondant
     event.target.classList.add('active');
   }
 
@@ -99,9 +101,11 @@
   }
 
   function initialize() {
-    var url = "/";
-    window.location.href = url;
+    document.querySelector('input[name="recherche"]').value = '';
+    window.location.href = "/";
+    showTab('rechercher');
   }
+
 </script>
 </body>
 </html>

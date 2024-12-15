@@ -5,7 +5,7 @@ import re
 app = Flask(__name__)
 
 # Chemin du fichier repertoire
-FICHIER_REPERTOIRE = "../cmake-build-debug/repertoire.txt"
+FICHIER_REPERTOIRE = os.path.abspath("../cmake-build-debug/repertoire.txt") 
 
 # Fonction de validation des noms et prénoms
 def est_valide_nom_prenom(nom_prenom):

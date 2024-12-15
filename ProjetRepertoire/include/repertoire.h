@@ -99,7 +99,26 @@ void afficher_personne(personne_t *personne);
  */
 node_t *trouver_personne(node_t *liste, const char *nom, const char *prenom);
 
+/**
+ * @brief Charge un répertoire à partir d'un fichier.
+ *
+ * Cette fonction charge un répertoire à partir d'un fichier de sauvegarde.
+ * Le fichier doit être dans un format spécifique permettant de reconstruire
+ * la liste chaînée des personnes.
+ *
+ * @param filename Nom du fichier contenant les données du répertoire.
+ * @return Pointeur vers la tête de la liste contenant les personnes chargées.
+ */
 node_t* charger_repertoire(const char *filename);
 
+/**
+ * @brief Sauvegarde le répertoire dans un fichier.
+ *
+ * Cette fonction sauvegarde le répertoire (la liste chaînée des personnes)
+ * dans un fichier afin de pouvoir le recharger plus tard.
+ *
+ * @param liste Pointeur vers la tête de la liste à sauvegarder.
+ * @param filename Nom du fichier dans lequel sauvegarder les données du répertoire.
+ */
 void sauvegarder_repertoire(node_t *liste, const char *filename);
 #endif // REPERTOIRE_H

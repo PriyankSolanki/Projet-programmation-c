@@ -1,3 +1,6 @@
+#include "../include/repertoire.h"
+#include <stdio.h>
+
 /**
 * @file main.c
  * @brief Programme principal pour la gestion du répertoire de contacts.
@@ -15,22 +18,19 @@
  *
  * Le programme continue de s'exécuter jusqu'à ce que l'utilisateur choisisse de le quitter.
  *
+ * Les données sont sauvegardés dans un fichier .txt.
+ *
  * @author SATKUNARAJAH Sarusman, SOLAKI Priyank & SASIKUMAR Sahkana
  *
  */
-
-#include "../include/repertoire.h"
-#include <stdio.h>
-
 
 #define FICHIER_REPERTOIRE "repertoire.txt"
 
 int main() {
     int fonctionnalite;
-    // node_t *repertoire = NULL;
     node_t *repertoire = charger_repertoire(FICHIER_REPERTOIRE);
 
-    printf("Bienvenue a toi !");
+    printf("Bienvenue sur votre repertoire !");
     while (true) {
         printf("\nQue voulez-vous faire ?");
         printf("\n\t1. Ajouter une personne");

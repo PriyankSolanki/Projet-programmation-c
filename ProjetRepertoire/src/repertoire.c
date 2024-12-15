@@ -1,11 +1,3 @@
-/**
-* @file repertoire.c
- * @brief Implémentation des fonctions de gestion du répertoire de contacts.
- *
- * Ce fichier contient les fonctions pour ajouter, afficher, rechercher et supprimer des contacts
- * dans un répertoire implémenté sous forme de liste doublement chaînée.
- */
-
 #include "../include/repertoire.h"
 
 #include <ctype.h>
@@ -15,7 +7,18 @@
 #include <stdlib.h>
 #include <string.h>
 
+/**
+* @file repertoire.c
+ * @brief Implémentation des fonctions de gestion du répertoire de contacts.
+ *
+ * Ce fichier contient les fonctions pour ajouter, afficher, rechercher et supprimer des contacts
+ * dans un répertoire implémenté sous forme de liste doublement chaînée.
+ *
+ */
 
+/**
+ * @brief Vide le tampon d'entrée pour éviter les problèmes avec fgets et scanf.
+ */
 void vider_tampon() {
     int c;
     while ((c = getchar()) != '\n' && c != EOF);
@@ -39,9 +42,9 @@ node_t *ajouter_personne(node_t *liste) {
     }
 
     do {
-        printf("Entrer le nom : ");
+        printf("Entrez le nom : ");
         fgets(personne->nom, sizeof(personne->nom), stdin);
-        personne->nom[strcspn(personne->nom, "\n")] = '\0'; // Supprimer le caractère de nouvelle ligne
+        personne->nom[strcspn(personne->nom, "\n")] = '\0';
 
         if (!estValideNomPrenom(personne->nom)) {
             printf("Le nom doit contenir uniquement des lettres, des tirets ou des espaces.\n");
@@ -49,9 +52,9 @@ node_t *ajouter_personne(node_t *liste) {
     } while (!estValideNomPrenom(personne->nom));
 
     do {
-        printf("Entrer le prenom : ");
+        printf("Entrez le prenom : ");
         fgets(personne->prenom, sizeof(personne->prenom), stdin);
-        personne->prenom[strcspn(personne->prenom, "\n")] = '\0'; // Supprimer le caractère de nouvelle ligne
+        personne->prenom[strcspn(personne->prenom, "\n")] = '\0';
 
         if (!estValideNomPrenom(personne->prenom)) {
             printf("Le prenom doit contenir uniquement des lettres, des tirets ou des espaces.\n");
@@ -62,18 +65,18 @@ node_t *ajouter_personne(node_t *liste) {
     while (estDoublonNomPrenom(liste, personne->nom, personne->prenom)) {
         printf("%s %s existe deja dans le repertoire.\n", personne->nom, personne->prenom);
         do {
-            printf("Entrer un autre prenom : ");
+            printf("Entrez un autre prenom : ");
             scanf("%39s", personne->prenom);
             vider_tampon();
         } while (!estValideNomPrenom(personne->prenom));
     }
 
     do {
-        printf("Entrer le numero de telephone : ");
+        printf("Entrez le numero de telephone : ");
         scanf("%39s", personne->numero_telephone);
         vider_tampon();
         if (!verifNum(personne->numero_telephone)) {
-            printf("Le numero de telephone doit contenir 10 chiffres.\n");
+            printf("Le numero de telephone doit commencer par 0 et contenir 10 chiffres ou commencer par +33.\n");
         }
     } while (!verifNum(personne->numero_telephone));
 
@@ -81,18 +84,18 @@ node_t *ajouter_personne(node_t *liste) {
     while (estDoublonNumTel(liste, personne->numero_telephone)) {
         printf("Le numero de telephone %s existe deja dans le repertoire.\n", personne->numero_telephone);
         do {
-            printf("Entrer un autre numero de telephone : ");
+            printf("Entrez un autre numero de telephone : ");
             scanf("%39s", personne->numero_telephone);
             vider_tampon();
         } while (!verifNum(personne->numero_telephone));
     }
 
     do {
-        printf("Entrer l'adresse mail : ");
+        printf("Entrez l'adresse mail : ");
         scanf("%39s", personne->adresse_mail);
         vider_tampon();
         if (!verifMail(personne->adresse_mail)) {
-            printf("L'adresse mail doit contenir un @ et un point.\n");
+            printf("Saisissez une adresse mail valide.\n");
         }
     } while (!verifMail(personne->adresse_mail));
 
@@ -143,7 +146,7 @@ void afficher_repertoire(node_t *liste) {
     int i = 1;
     node_t *current = liste;
     while (current != NULL) {
-        printf("\nPersonne %d :\n", i++);
+        printf("\nContact %d :\n", i++);
         afficher_personne(current->personne);
         current = current->next;
     }
@@ -221,7 +224,7 @@ void rechercher_personne(node_t *liste) {
             printf("\nContact trouve :\n");
             afficher_personne(matching->personne);
         } else {
-            printf("\nAucun contact avec le nom '%s' et le prenom '%s' n'a ete trouve.\n", nom, prenom);
+            printf("\nAucun contact avec le nom %s et le prenom %s n'a ete trouve.\n", nom, prenom);
         }
     }
 }
@@ -262,7 +265,7 @@ node_t *supprimer_personne(node_t *liste) {
     }
 
     if (count > 1) {
-        printf("Il existe plusieurs personnes avec le nom '%s'. Quel est son prenom ? : ", nom);
+        printf("Il existe plusieurs personnes avec le nom %s. Quel est son prenom ? : ", nom);
         fgets(prenom, sizeof(prenom), stdin);
         prenom[strcspn(prenom, "\n")] = '\0';
 
@@ -281,7 +284,7 @@ node_t *supprimer_personne(node_t *liste) {
     scanf(" %c", &confirmation);
     vider_tampon();
     if (tolower(confirmation) != 'o') {
-        printf("Suppression annulee.\n");
+        printf("La suppression a ete annulee !\n");
         return liste;
     }
 
@@ -313,6 +316,16 @@ void afficher_personne(personne_t *personne) {
     printf("\tAdresse mail : %s\n", personne->adresse_mail);
 }
 
+/**
+ * @brief Sauvegarde le répertoire dans un fichier.
+ *
+ * Cette fonction parcourt la liste chaînée représentant le répertoire et écrit les informations
+ * de chaque contact dans un fichier texte. Les informations sont sauvegardées sous forme de lignes,
+ * chaque ligne contenant les informations d'un contact séparées par des points-virgules.
+ *
+ * @param liste Pointeur vers la tête de la liste des contacts.
+ * @param filename Nom du fichier dans lequel sauvegarder le répertoire.
+ */
 void sauvegarder_repertoire(node_t *liste, const char *filename) {
     FILE *fichier = fopen(filename, "w");
     if (fichier == NULL) {
@@ -320,6 +333,7 @@ void sauvegarder_repertoire(node_t *liste, const char *filename) {
         return;
     }
 
+    // Parcourt la liste et écrit chaque contact dans le fichier
     node_t *current = liste;
     while (current != NULL) {
         fprintf(fichier, "%s;%s;%s;%s\n",
@@ -333,11 +347,20 @@ void sauvegarder_repertoire(node_t *liste, const char *filename) {
     fclose(fichier);
 }
 
-
+/**
+ * @brief Charge un répertoire depuis un fichier.
+ *
+ * Cette fonction lit un fichier contenant les informations des contacts sauvegardées sous forme
+ * de lignes, chaque ligne contenant les informations d'un contact séparées par des points-virgules.
+ * Elle crée une liste chaînée représentant le répertoire en mémoire.
+ *
+ * @param filename Nom du fichier à partir duquel charger le répertoire.
+ * @return node_t* Pointeur vers la tête de la liste des contacts chargés, ou NULL si le fichier est vide ou introuvable.
+ */
 node_t* charger_repertoire(const char *filename) {
     FILE *fichier = fopen(filename, "r");
     if (fichier == NULL) {
-        printf("Fichier '%s' introuvable. Creation d'un nouveau repertoire.\n", filename);
+        printf("Le fichier '%s' est introuvable. Creation d'un nouveau repertoire.\n", filename);
         fichier = fopen(filename, "w, ccs=UTF-8");
         if (fichier == NULL) {
             printf("Impossible de creer le fichier '%s'.", filename);
@@ -367,6 +390,7 @@ node_t* charger_repertoire(const char *filename) {
                 return repertoire;
             }
 
+            // Copie des données dans la structure personne
             strncpy(nouvelle_personne->nom, nom, sizeof(nouvelle_personne->nom) - 1);
             nouvelle_personne->nom[sizeof(nouvelle_personne->nom) - 1] = '\0';
 

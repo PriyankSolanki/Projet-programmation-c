@@ -11,49 +11,85 @@
 <h1>Répertoire de vos contacts</h1>
 <img src="{{ url_for('static', filename='images/logo.png') }}" alt="Logo" id="logo">
 
-<h2>Ajouter un contact</h2>
+<!-- Navigation -->
+<nav class="tabs">
+  <button class="tab-button active" onclick="showTab('accueil')">Accueil</button>
+  <button class="tab-button" onclick="showTab('ajouter')">Ajouter un contact</button>
+  <button class="tab-button" onclick="showTab('rechercher')">Rechercher un contact</button>
+</nav>
 
-<!-- Affichage du message d'erreur s'il y en a -->
-{% if erreur %}
-<div style="color: red; font-weight: bold;">{{ erreur }}</div>
-{% endif %}
+<!-- Section Accueil -->
+<div id="accueil" class="tab-content active">
+  <h2>Contacts</h2>
+  <div class="contacts-container">
+    {% for contact in repertoire %}
+    <div class="contact-box">
+      <h3>Nom : {{ contact.nom }}</h3>
+      <p>Prénom : {{ contact.prenom }}</p>
+      <p>Téléphone : {{ contact.tel }}</p>
+      <p>Email : {{ contact.mail }}</p>
+      <button onclick="confirmDelete('{{ contact.nom }}', '{{ contact.prenom }}')">Supprimer</button>
+    </div>
+    {% endfor %}
+  </div>
+</div>
 
-<!-- Formulaire pour ajouter un contact -->
-<div class="form-container">
+<!-- Section Ajouter -->
+<div id="ajouter" class="tab-content">
+  <h2>Ajouter un contact</h2>
+  {% if erreur %}
+  <div style="color: red; font-weight: bold;">{{ erreur }}</div>
+  {% endif %}
   <form method="POST" action="/ajouter" class="form-ajout">
     <input type="text" name="nom" placeholder="Nom" required pattern="^[A-Za-zÀ-ÿà-ÿÉéÈèÊêËëÎîÏïÔôÖöÙùÛûÜüÇç- ]+$" title="Le nom ne peut contenir que des lettres, des accents, des tirets et des espaces.">
     <input type="text" name="prenom" placeholder="Prénom" required pattern="^[A-Za-zÀ-ÿà-ÿÉéÈèÊêËëÎîÏïÔôÖöÙùÛûÜüÇç- ]+$" title="Le prénom ne peut contenir que des lettres, des accents, des tirets et des espaces.">
-    <input type="tel" name="tel" placeholder="Numéro de téléphone (10 chiffres)" required pattern="^\d{10}$" title="Le numéro de téléphone doit être composé de 10 chiffres.">
+    <input type="tel" name="tel" placeholder="Numéro de téléphone (10 chiffres)" required pattern="^\d{10}$" title="Le numéro de téléphone doit être composé de 10 chiffres en commençant par 0.">
     <input type="email" name="mail" placeholder="Adresse mail" required>
     <button type="submit">Ajouter</button>
   </form>
-
-  <!-- Formulaire de recherche -->
-  <div class="form-recherche">
-    <form method="POST" action="/rechercher">
-      <input type="text" name="recherche" placeholder="Nom ou prénom" required>
-      <button type="submit">Rechercher</button>
-
-    </form>
-    <button class="reset-button" onclick="initialize()">Réinitialiser</button>
-  </div>
-
 </div>
 
-<h2>Contacts</h2>
-<div class="contacts-container">
-  {% for contact in repertoire %}
-  <div class="contact-box">
-    <h3>Nom : {{ contact.nom }}</h3>
-    <p>Prénom : {{ contact.prenom }}</p>
-    <p>Téléphone : {{ contact.tel }}</p>
-    <p>Email : {{ contact.mail }}</p>
-    <button onclick="confirmDelete('{{ contact.nom }}', '{{ contact.prenom }}')">Supprimer</button>
+<!-- Section Rechercher -->
+<div id="rechercher" class="tab-content">
+  <h2>Rechercher un contact</h2>
+  <form method="POST" action="/rechercher" class="form-recherche">
+    <input type="text" name="recherche" placeholder="Nom ou prénom" required>
+    <button type="submit">Rechercher</button>
+  </form>
+  <button type="button" class="reset-button" onclick="initialize()">Réinitialiser</button>
+
+  <!-- Affichage des résultats -->
+  <div class="contacts-container">
+    {% for contact in resultats %}
+    <div class="contact-box">
+      <h3>Nom : {{ contact.nom }}</h3>
+      <p>Prénom : {{ contact.prenom }}</p>
+      <p>Téléphone : {{ contact.tel }}</p>
+      <p>Email : {{ contact.mail }}</p>
+      <button onclick="confirmDelete('{{ contact.nom }}', '{{ contact.prenom }}')">Supprimer</button>
+    </div>
+    {% endfor %}
   </div>
-  {% endfor %}
 </div>
+
 
 <script>
+  function showTab(tabId) {
+    // Cacher tous les contenus
+    const contents = document.querySelectorAll('.tab-content');
+    contents.forEach(content => content.classList.remove('active'));
+
+    // Retirer la classe active de tous les boutons
+    const buttons = document.querySelectorAll('.tab-button');
+    buttons.forEach(button => button.classList.remove('active'));
+
+    // Afficher le contenu correspondant
+    document.getElementById(tabId).classList.add('active');
+
+    // Activer le bouton correspondant
+    event.target.classList.add('active');
+  }
+
   function confirmDelete(nom, prenom) {
     var isConfirmed = confirm("Êtes-vous sûr de vouloir supprimer le contact " + nom + " " + prenom + " ?");
     if (isConfirmed) {
@@ -67,6 +103,5 @@
     window.location.href = url;
   }
 </script>
-
 </body>
 </html>

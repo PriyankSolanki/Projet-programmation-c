@@ -1,3 +1,11 @@
+#include "../include/repertoire.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <ctype.h>
+#include <string.h>
+#include <wctype.h>
+#include <stdbool.h>
+
 /**
 * @file inputChecker.c
  * @brief Implémentation des fonctions de vérification des entrées utilisateur.
@@ -7,20 +15,12 @@
  * Des fonctions sont également présentes pour détecter les doublons dans le répertoire basé sur ces informations.
  *
  * Les principales fonctionnalités sont :
- * - Vérification de la validité d'un nom ou prénom (contenant uniquement des lettres).
+ * - Vérification de la validité d'un nom ou prénom (contenant uniquement des lettres + possibilité des caractères spéciaux ou noms composés).
  * - Vérification de la validité d'un numéro de téléphone (formats "0XXXXXXXXX" ou "+33XXXXXXXX").
  * - Vérification de la validité d'une adresse e-mail (contenant un "@" et un "." après).
  * - Détection de doublons pour un nom/prénom, un numéro de téléphone ou une adresse e-mail dans le répertoire.
  *
  */
-
-#include "../include/repertoire.h"
-#include <stdio.h>
-#include <stdlib.h>
-#include <ctype.h>
-#include <string.h>
-#include <wctype.h>
-#include <stdbool.h>
 
 /**
  * @brief Vérifie si une chaîne est un nom ou un prénom valide.

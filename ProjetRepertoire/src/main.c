@@ -24,7 +24,8 @@
  *
  */
 
-#define FICHIER_REPERTOIRE "repertoire.txt"
+//#define FICHIER_REPERTOIRE "repertoire.txt"
+#define FICHIER_REPERTOIRE "cmake-build-debug/repertoire.txt"
 
 int main() {
     int fonctionnalite;
